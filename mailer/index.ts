@@ -139,9 +139,9 @@ class Mailer{
     
           try {
             await this.sendMail(pushMessage);
-            console.log(`E-mail enviado para ${email} \n link: ${cancelLink}`);
+            console.log(`E-mail enviado para ${email}`);
           } catch (error) {
-            console.error(`Erro ao enviar e-mail para ${email}:`, error);
+            console.error(`Erro ao enviar e-mail para ${email}:`);
           }
         }
       }

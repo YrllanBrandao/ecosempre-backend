@@ -12,6 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const connection_1 = __importDefault(require("../database/connection"));
 const static_1 = __importDefault(require("../static"));
 class Newsletter {
@@ -33,6 +36,15 @@ class Newsletter {
             return true;
         }
         return false;
+    }
+    descryptJwtToken(token) {
+        try {
+            const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+            return decodedToken;
+        }
+        catch (error) {
+            return null;
+        }
     }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -81,20 +93,26 @@ class Newsletter {
     deleteEmail(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { email } = req.body;
-                const isValid = this.validateEmail(email);
-                const exist = yield this.verifyEmail(email);
-                if (isValid) {
-                    if (exist) {
-                        yield (0, connection_1.default)("newsletter").delete("*").where({ email });
-                        res.sendStatus(200);
+                const { token } = req.body;
+                const decodedToken = this.descryptJwtToken(token);
+                if (decodedToken) {
+                    const isValid = this.validateEmail(decodedToken.email);
+                    const exist = yield this.verifyEmail(decodedToken.email);
+                    if (isValid) {
+                        if (exist) {
+                            yield (0, connection_1.default)("newsletter").delete("*").where({ email: decodedToken.email });
+                            res.sendStatus(200);
+                        }
+                        else {
+                            res.sendStatus(404);
+                        }
                     }
                     else {
-                        res.sendStatus(404);
+                        throw new Error("invalid E-mail");
                     }
                 }
                 else {
-                    throw new Error("invalid E-mail");
+                    throw new Error("Invalid token");
                 }
             }
             catch (error) {

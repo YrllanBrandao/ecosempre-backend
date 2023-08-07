@@ -1,7 +1,15 @@
 import { Request, Response } from "express";
+import dotenv from 'dotenv';
+dotenv.config();
+import jwt from 'jsonwebtoken'
+
 
 import Connection from "../database/connection";
 import Static from "../static";
+
+interface IDecodedToken{
+    email: string
+}
 
 class Newsletter {
     constructor() { }
@@ -21,6 +29,18 @@ class Newsletter {
             return true;
         }
         return false;
+    }
+    private descryptJwtToken(token:string): IDecodedToken|null
+    {
+        try{
+            const decodedToken:IDecodedToken = jwt.verify(token, process.env.JWT_SECRET!) as IDecodedToken;
+
+            return decodedToken;
+        }
+        catch(error:any)
+        {
+            return null;
+        }
     }
     public async getAll(req:Request, res:Response)
     {
@@ -74,24 +94,33 @@ class Newsletter {
     public async deleteEmail(req:Request, res:Response)
     {
         try{
-            const {email}:{email:string} = req.body;
-        const isValid:boolean = this.validateEmail(email);
+            const {token}:{token:string} = req.body;
+            
+            const decodedToken: IDecodedToken | null = this.descryptJwtToken(token);
 
-        const exist:boolean = await this.verifyEmail(email);
-        if(isValid)
-        {
-            if(exist)
+            if(decodedToken)
             {
-                await Connection("newsletter").delete("*").where({email});
-                res.sendStatus(200);
+                const isValid:boolean = this.validateEmail(decodedToken.email);
+
+                const exist:boolean = await this.verifyEmail(decodedToken.email);
+                if(isValid)
+                {
+                    if(exist)
+                    {
+                        await Connection("newsletter").delete("*").where({email:decodedToken.email});
+                        res.sendStatus(200);
+                    }
+                    else{
+                        res.sendStatus(404);
+                    }
+                }
+                else{
+                    throw new Error("invalid E-mail");
+                }
             }
             else{
-                res.sendStatus(404);
+                throw new Error("Invalid token")
             }
-        }
-        else{
-            throw new Error("invalid E-mail");
-        }
         }
         catch(error:any)
         {
