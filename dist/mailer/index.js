@@ -17,6 +17,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const fs_1 = __importDefault(require("fs"));
 dotenv_1.default.config();
+const server_1 = require("../server");
 const connection_1 = __importDefault(require("../database/connection"));
 class Mailer {
     constructor() { }
@@ -33,10 +34,10 @@ class Mailer {
             const filePath = attachment.path;
             fs_1.default.unlink(filePath, (err) => {
                 if (err) {
-                    console.error(`Error deleting file ${filePath}: ${err.message}`);
+                    server_1.logger.error(`Error deleting file ${filePath}: ${err.message}`);
                 }
                 else {
-                    console.log(`File ${filePath} deleted successfully.`);
+                    server_1.logger.info(`File ${filePath} deleted successfully.`);
                 }
             });
         });
@@ -112,10 +113,10 @@ class Mailer {
                 };
                 try {
                     yield this.sendMail(pushMessage);
-                    console.log(`E-mail enviado para ${email}`);
+                    server_1.logger.info(`E-mail enviado para ${email}`);
                 }
                 catch (error) {
-                    console.error(`Erro ao enviar e-mail para ${email}:`);
+                    server_1.logger.error(`Erro ao enviar e-mail para ${email}:`);
                 }
             }
         });

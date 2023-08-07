@@ -1,6 +1,6 @@
 import express, {Application} from 'express';
 import cors from 'cors';
-
+import pino, {BaseLogger} from 'pino';
 import userRoutes from './routes/user';
 import tagRoutes from './routes/tag';
 import articleRoutes from './routes/article';
@@ -13,7 +13,14 @@ import scheduleRoutes from './routes/schedulePickup';
 // setup admin
 createAdminUser();
 const app:Application = express();
-
+export const logger:BaseLogger = pino({
+    transport: {
+        target: "pino-pretty",
+        options: {
+            colorize: true
+        }
+    }
+})
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());

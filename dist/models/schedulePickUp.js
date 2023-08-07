@@ -67,7 +67,7 @@ class SchedulePickup {
                     res.sendStatus(200);
                 }
                 else {
-                    throw new Error('an error has ocorred' + status);
+                    throw new Error('an error has ocorred');
                 }
             }
             catch (error) {

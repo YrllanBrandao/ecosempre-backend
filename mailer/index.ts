@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 dotenv.config();
+import { logger } from "../server";
+
 
 import SchedulePickup, { ScheduleMessage, Attachment } from '../models/schedulePickUp';
 import Connection from '../database/connection';
@@ -57,9 +59,9 @@ class Mailer{
           const filePath = attachment.path;
           fs.unlink(filePath, (err) => {
             if (err) {
-              console.error(`Error deleting file ${filePath}: ${err.message}`);
+              logger.error(`Error deleting file ${filePath}: ${err.message}`);
             } else {
-              console.log(`File ${filePath} deleted successfully.`);
+              logger.info(`File ${filePath} deleted successfully.`);
             }
           });
         });
@@ -139,9 +141,9 @@ class Mailer{
     
           try {
             await this.sendMail(pushMessage);
-            console.log(`E-mail enviado para ${email}`);
+            logger.info(`E-mail enviado para ${email}`);
           } catch (error) {
-            console.error(`Erro ao enviar e-mail para ${email}:`);
+            logger.error(`Erro ao enviar e-mail para ${email}:`);
           }
         }
       }
