@@ -1,10 +1,10 @@
 import knex, {Knex, } from 'knex';
 import dotenv from 'dotenv';
 dotenv.config();
-const host:string = "172.17.0.2";
-const port:number = 3306;
-const user:string = "root";
-const database:string = "ecoSempre";
+const host:string = process.env.DB_HOST!;
+const port:number = Number(process.env.DB_PORT!);
+const user:string = process.env.DB_USER!;
+const database:string = process.env.DB_NAME!;
 const knexConfig: Knex.Config = {
     client: "mysql2",
     connection:{

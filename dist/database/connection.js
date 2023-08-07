@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const knex_1 = __importDefault(require("knex"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const host = "172.17.0.2";
-const port = 3306;
-const user = "root";
-const database = "ecoSempre";
+const host = process.env.DB_HOST;
+const port = Number(process.env.DB_PORT);
+const user = process.env.DB_USER;
+const database = process.env.DB_NAME;
 const knexConfig = {
     client: "mysql2",
     connection: {
