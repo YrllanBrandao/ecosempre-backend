@@ -17,7 +17,7 @@ class Tag{
     private currentDate:string  = new Static().getCurrentDate();
     private async verifyTagByName (name:string)
     {
-        const tag:object | undefined = await Connection("tags").select("*").where({name}).first();
+        const tag:object | undefined = await Connection("tags").select("*").where({name: slugify(name)}).first();
         if(tag === undefined )
         {
             return false;

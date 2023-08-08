@@ -22,7 +22,7 @@ class Tag {
     ;
     verifyTagByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tag = yield (0, connection_1.default)("tags").select("*").where({ name }).first();
+            const tag = yield (0, connection_1.default)("tags").select("*").where({ name: (0, slugify_1.default)(name) }).first();
             if (tag === undefined) {
                 return false;
             }
