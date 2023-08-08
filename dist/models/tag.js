@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const slugify_1 = __importDefault(require("slugify"));
 const connection_1 = __importDefault(require("../database/connection"));
 const static_1 = __importDefault(require("../static"));
 class Tag {
@@ -42,7 +43,7 @@ class Tag {
             try {
                 const { name } = req.body;
                 const fullTag = {
-                    name,
+                    name: (0, slugify_1.default)(name),
                     createdAt: this.currentDate,
                     updatedAt: this.currentDate
                 };

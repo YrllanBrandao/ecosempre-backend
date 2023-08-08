@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-
+import slugify from 'slugify';
 import Connection from '../database/connection';
 import Static from '../static';
 
@@ -18,7 +18,6 @@ class Tag{
     private async verifyTagByName (name:string)
     {
         const tag:object | undefined = await Connection("tags").select("*").where({name}).first();
-
         if(tag === undefined )
         {
             return false;
@@ -40,7 +39,7 @@ class Tag{
         const {name}:{name:string} = req.body;
 
         const fullTag:ITag = {
-            name,
+            name:slugify(name),
             createdAt: this.currentDate,
             updatedAt: this.currentDate
         }
