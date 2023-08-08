@@ -12,6 +12,11 @@ articleRoutes.get("/articles",  async (req: Request, res: Response) => {
     const article: Article = new Article();
     article.getArticles(req, res);
 })
+articleRoutes.get("/articles/:tag",  async (req: Request, res: Response) => {
+    const article: Article = new Article();
+    article.getArticles(req, res);
+})
+
 articleRoutes.post("/article", middleware.handle, async (req: Request, res: Response) => {
     const article: Article = new Article();
     article.creatArticle(req, res);
