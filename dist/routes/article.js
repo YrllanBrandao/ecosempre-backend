@@ -23,7 +23,7 @@ articleRoutes.get("/articles", (req, res) => __awaiter(void 0, void 0, void 0, f
 }));
 articleRoutes.get("/articles/:tag", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const article = new article_1.default();
-    article.getArticles(req, res);
+    article.getArticlesByTag(req, res);
 }));
 articleRoutes.post("/article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const article = new article_1.default();

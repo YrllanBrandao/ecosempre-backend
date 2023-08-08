@@ -95,31 +95,6 @@ class Article {
                 res.status(400).send(error.sqlMessage);
             }
         });
-        this.getArticles = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { limit, page } = req.query;
-                // verifying if contain pagination in query
-                const pagination = this.verifyPagination(limit, page);
-                if (pagination) {
-                    const offset = (Number(page) - 1) * Number(limit);
-                    const articles = yield (0, connection_1.default)("articles").select("*").limit(Number(limit)).offset(Number(offset));
-                    if (articles[0] === undefined) {
-                        res.status(404).send("doesn't exists articles");
-                    }
-                    res.status(200).send(articles);
-                }
-                else {
-                    const articles = yield (0, connection_1.default)("articles").select("*");
-                    if (articles[0] === undefined) {
-                        res.sendStatus(404);
-                    }
-                    res.status(200).send(articles);
-                }
-            }
-            catch (error) {
-                res.status(400).send(error.sqlMessage);
-            }
-        });
         this.getArticleByKey = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const regex = /^\d+$/g;
@@ -165,6 +140,67 @@ class Article {
             }
             catch (error) {
                 return res.sendStatus(400);
+            }
+        });
+    }
+    verifyTagExistence(tag) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = (0, connection_1.default)("tags").select("*").where({ name: tag }).first();
+            if (query === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
+    getArticlesByTag(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const tag = req.params.tag;
+                const tagExist = yield this.verifyTagExistence(tag);
+                if (tagExist) {
+                    const articlesWithGivenTag = yield (0, connection_1.default)("articles").select("*")
+                        .innerJoin('articleTag', 'articles.id', 'articleTag.article_id')
+                        .innerJoin('tags', 'articleTag.tag_id', 'tags.id')
+                        .where('tags.name', tag);
+                    if (articlesWithGivenTag[0] === undefined) {
+                        res.sendStatus(404);
+                    }
+                    else {
+                        res.status(200).send(articlesWithGivenTag);
+                    }
+                }
+                else {
+                    throw new Error("invalid tag");
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
+    getArticles(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { limit, page } = req.query;
+                const pagination = this.verifyPagination(limit, page);
+                if (pagination) {
+                    const offset = (Number(page) - 1) * Number(limit);
+                    const articles = yield (0, connection_1.default)("articles").select("*").limit(Number(limit)).offset(Number(offset));
+                    if (articles[0] === undefined) {
+                        res.status(404).send("doesn't exists articles");
+                    }
+                    res.status(200).send(articles);
+                }
+                else {
+                    const articles = yield (0, connection_1.default)("articles").select("*");
+                    if (articles[0] === undefined) {
+                        res.sendStatus(404);
+                    }
+                    res.status(200).send(articles);
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.sqlMessage);
             }
         });
     }

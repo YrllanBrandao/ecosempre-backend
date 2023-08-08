@@ -57,6 +57,16 @@ class Article {
         }
         return true;
     }
+    private async verifyTagExistence(tag:string):Promise<boolean>{
+
+        const  query: object | undefined = Connection("tags").select("*").where({name:tag}).first();
+
+        if(query === undefined)
+        {
+            return false;
+        }
+        return true;
+    }
     public creatArticle = async (req: Request, res: Response) => {
 
         try {
@@ -115,12 +125,42 @@ class Article {
         }
 
     }
-    public getArticles = async (req: Request, res: Response) => {
+
+    public async  getArticlesByTag(req:Request, res:Response)
+    {
+        try{
+            const tag:string = req.params.tag;
+
+            const tagExist:boolean =  await this.verifyTagExistence(tag);
+
+            if(tagExist)
+            {
+                const articlesWithGivenTag: string[] = await Connection("articles").select("*")
+                .innerJoin('articleTag', 'articles.id', 'articleTag.article_id')
+                .innerJoin('tags', 'articleTag.tag_id', 'tags.id')
+                .where('tags.name', tag);
+
+                if(articlesWithGivenTag[0] === undefined)
+                {
+                    res.sendStatus(404);
+                }
+                else{
+                    res.status(200).send(articlesWithGivenTag)
+                }
+            }
+            else{
+                throw new Error("invalid tag");
+            }
+        }
+        catch(error:any)
+        {
+            res.status(400).send(error.message);
+        }
+    }       
+    public async  getArticles(req: Request, res: Response) {
         try {
-            const { limit, page }: { limit?: string, page?: string } = req.query;
+            const { limit, page }: { limit?: string, page?: string} = req.query;
 
-
-            // verifying if contain pagination in query
             const pagination: boolean = this.verifyPagination(limit, page);
             if (pagination) {
                 const offset = (Number(page) - 1) * Number(limit)
@@ -129,6 +169,7 @@ class Article {
                 if (articles[0] === undefined) {
                     res.status(404).send("doesn't exists articles");
                 }
+                
                 res.status(200).send(articles);
             }
             else {
