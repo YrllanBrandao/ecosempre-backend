@@ -145,7 +145,7 @@ class Article {
     }
     verifyTagExistence(tag) {
         return __awaiter(this, void 0, void 0, function* () {
-            const query = (0, connection_1.default)("tags").select("*").where({ name: tag }).first();
+            const query = yield (0, connection_1.default)("tags").select("*").where({ name: tag }).first();
             if (query === undefined) {
                 return false;
             }

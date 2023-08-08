@@ -59,7 +59,7 @@ class Article {
     }
     private async verifyTagExistence(tag:string):Promise<boolean>{
 
-        const  query: object | undefined = Connection("tags").select("*").where({name:tag}).first();
+        const  query: object | undefined =  await Connection("tags").select("*").where({name:tag}).first();
 
         if(query === undefined)
         {
