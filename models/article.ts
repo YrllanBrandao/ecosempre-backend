@@ -6,16 +6,52 @@ import Connection from "../database/connection";
 import Mailer from '../mailer';
 
 interface IArticle {
-    title: string,
-    author: string,
-    content: string
-    slug: string,
-    author_id: number
+    title: string;
+    author: string;
+    content: string;
+    slug: string;
+    author_id: number;
+}
+
+interface IArticleTag{
+    article_id:  number;
+    tag_id: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 class Article {
     private currentDate: string = new Static().getCurrentDate();
 
+    private async registerArticleTags(tags:number[], articleId:number):Promise<void>
+    {
+      
+    
+       try{
+        for(const tag of tags )
+        {
+          
+            console.log("ID?", tag)
+            const register:IArticleTag = {
+                article_id: articleId,
+                tag_id: tag,
+                createdAt: this.currentDate,
+                updatedAt: this.currentDate
+                
+            }
+
+            console.log(register)
+           
+            await Connection("articleTag").insert(register);
+        }
+
+       }
+       catch(error:any)
+       {
+        throw error;
+       }
+       
+    }
     private verifyArticleByTitle = async (title: string) => {
         const exist: string[] = await Connection("articles").select("*").where({ title });
 
@@ -71,6 +107,9 @@ class Article {
 
         try {
             const article: IArticle = req.body;
+            const {tags_ids}:{tags_ids:number[]} = req.body;
+
+            console.log(">>", tags_ids)
             const isValid: boolean = this.articleValidate(article);
             const mailer:Mailer = new Mailer();
             if (isValid) {
@@ -81,18 +120,26 @@ class Article {
                     res.status(409).send("The article already exists!");
                 }
                 else {
+                    
                     const fullArticle: object = {
-                        ...article,
+                        title: article.title,
+                        content: article.content,
+                        author: article.author,
+                        author_id: article.author_id,
                         createdAt: this.currentDate,
                         updatedAt: this.currentDate,
                         slug: slugify(article.title)
                     }
 
-                    await Connection("articles").insert(fullArticle);
+                   const articleId:number =  Number(await Connection("articles").insert(fullArticle));
+                   await this.registerArticleTags(tags_ids, articleId);
                     await mailer.sendBatchEmails({
                         slug: slugify(article.title),
                         title: article.title
                     })
+                    
+
+
                     res.status(201).send("Created Successfully!");
                     
                 }
@@ -103,7 +150,7 @@ class Article {
 
         }
         catch (error: any) {
-            res.status(400).send(error)
+            res.status(400).send(error.message)
         }
     }
 

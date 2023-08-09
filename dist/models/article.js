@@ -56,6 +56,8 @@ class Article {
         this.creatArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const article = req.body;
+                const { tags_ids } = req.body;
+                console.log(">>", tags_ids);
                 const isValid = this.articleValidate(article);
                 const mailer = new mailer_1.default();
                 if (isValid) {
@@ -64,8 +66,17 @@ class Article {
                         res.status(409).send("The article already exists!");
                     }
                     else {
-                        const fullArticle = Object.assign(Object.assign({}, article), { createdAt: this.currentDate, updatedAt: this.currentDate, slug: (0, slugify_1.default)(article.title) });
-                        yield (0, connection_1.default)("articles").insert(fullArticle);
+                        const fullArticle = {
+                            title: article.title,
+                            content: article.content,
+                            author: article.author,
+                            author_id: article.author_id,
+                            createdAt: this.currentDate,
+                            updatedAt: this.currentDate,
+                            slug: (0, slugify_1.default)(article.title)
+                        };
+                        const articleId = Number(yield (0, connection_1.default)("articles").insert(fullArticle));
+                        yield this.registerArticleTags(tags_ids, articleId);
                         yield mailer.sendBatchEmails({
                             slug: (0, slugify_1.default)(article.title),
                             title: article.title
@@ -78,7 +89,7 @@ class Article {
                 }
             }
             catch (error) {
-                res.status(400).send(error);
+                res.status(400).send(error.message);
             }
         });
         this.deleteArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -140,6 +151,26 @@ class Article {
             }
             catch (error) {
                 return res.sendStatus(400);
+            }
+        });
+    }
+    registerArticleTags(tags, articleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                for (const tag of tags) {
+                    console.log("ID?", tag);
+                    const register = {
+                        article_id: articleId,
+                        tag_id: tag,
+                        createdAt: this.currentDate,
+                        updatedAt: this.currentDate
+                    };
+                    console.log(register);
+                    yield (0, connection_1.default)("articleTag").insert(register);
+                }
+            }
+            catch (error) {
+                throw error;
             }
         });
     }
