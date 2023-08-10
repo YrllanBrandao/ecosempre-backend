@@ -7,12 +7,12 @@ import Static from "../static";
 
 
 export interface IContact {
-    name: string,
-    email: string,
-    subject: string,
-    phone: string,
-    message?: string,
-    createdAt?: string
+    name: string;
+    email: string;
+    subject: string;
+    phone: string;
+    message: string;
+    createdAt?: string;
 }
 
 
@@ -20,6 +20,17 @@ export interface IContact {
 class Contact {
     constructor() { }
     private currentDate: string = new Static().getCurrentDate();
+    private isValidContact(contact: IContact): boolean {
+        // Perform your own validation here
+        // For example, check if required fields are present
+        return (
+            contact.name !== undefined &&
+            contact.email !== undefined &&
+            contact.subject !== undefined &&
+            contact.phone !== undefined &&
+            contact.message !== undefined
+        );
+    }
     private verifyContact = async (id: number) => {
         const result: string[] = await Connection("contacts").select().where({ id }).first();
 
@@ -112,13 +123,21 @@ class Contact {
     public registerContact = async (req: Request, res: Response) => {
         try {
             const newContact: IContact = req.body;
-            const fullContact: IContact = {
-                ...newContact,
-                createdAt: this.currentDate
-            }
-            const contactId = await Connection("contacts").insert(fullContact);
 
-            res.status(201).send(contactId);
+            const isValidContact: boolean = this.isValidContact(newContact);
+            if(isValidContact){
+                const fullContact: IContact = {
+                    ...newContact,
+                    createdAt: this.currentDate
+                }
+                const contactId = await Connection("contacts").insert(fullContact);
+    
+                res.status(201).send(contactId);
+            }
+            else{
+                throw new Error("invalid contact")
+            }
+            
         }
         catch (error: any) {
             res.sendStatus(400);

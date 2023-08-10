@@ -87,14 +87,29 @@ class Contact {
         this.registerContact = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const newContact = req.body;
-                const fullContact = Object.assign(Object.assign({}, newContact), { createdAt: this.currentDate });
-                const contactId = yield (0, connection_1.default)("contacts").insert(fullContact);
-                res.status(201).send(contactId);
+                const isValidContact = this.isValidContact(newContact);
+                if (isValidContact) {
+                    const fullContact = Object.assign(Object.assign({}, newContact), { createdAt: this.currentDate });
+                    const contactId = yield (0, connection_1.default)("contacts").insert(fullContact);
+                    res.status(201).send(contactId);
+                }
+                else {
+                    throw new Error("invalid contact");
+                }
             }
             catch (error) {
                 res.sendStatus(400);
             }
         });
+    }
+    isValidContact(contact) {
+        // Perform your own validation here
+        // For example, check if required fields are present
+        return (contact.name !== undefined &&
+            contact.email !== undefined &&
+            contact.subject !== undefined &&
+            contact.phone !== undefined &&
+            contact.message !== undefined);
     }
 }
 exports.default = Contact;
