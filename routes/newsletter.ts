@@ -12,11 +12,11 @@ newsletterRoutes.post("/newsletter", async(req:Request, res:Response)=>{
     const newsletter:Newsletter = new Newsletter();
     newsletter.registerEmail(req, res);
 })
-newsletterRoutes.delete("/newsletter", async(req:Request, res:Response)=>{
+newsletterRoutes.delete("/newsletter", middleware.handle, async(req:Request, res:Response)=>{
     const newsletter:Newsletter = new Newsletter();
     newsletter.deleteEmail(req, res);
 })
-newsletterRoutes.get("/newsletter", async(req:Request, res:Response)=>{
+newsletterRoutes.get("/newsletter", middleware.handle,  async(req:Request, res:Response)=>{
     const newsletter:Newsletter = new Newsletter();
     newsletter.getAll(req, res);
 })

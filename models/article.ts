@@ -31,7 +31,7 @@ class Article {
         for(const tag of tags )
         {
           
-            console.log("ID?", tag)
+           
             const register:IArticleTag = {
                 article_id: articleId,
                 tag_id: tag,
@@ -203,6 +203,7 @@ class Article {
         {
             res.status(400).send(error.message);
         }
+           
     }       
     public async  getArticles(req: Request, res: Response) {
         try {

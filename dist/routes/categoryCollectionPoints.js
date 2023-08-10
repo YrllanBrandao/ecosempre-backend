@@ -17,7 +17,7 @@ const categoryRoutes = express_1.default.Router();
 const categoryCollectionPoints_1 = __importDefault(require("../models/categoryCollectionPoints"));
 const middleware_1 = __importDefault(require("../auth/middleware"));
 const middleware = new middleware_1.default();
-categoryRoutes.post("/category-collection-points", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+categoryRoutes.post("/category-collection-points", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryCollectionPoints = new categoryCollectionPoints_1.default();
     categoryCollectionPoints.createCategory(req, res);
 }));

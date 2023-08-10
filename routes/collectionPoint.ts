@@ -8,7 +8,7 @@ const collectionPointRoutes: Router = express.Router();
 
 const middleware:Middleware = new Middleware();
 
-collectionPointRoutes.post("/collection-point", async(req:Request, res:Response)=>{
+collectionPointRoutes.post("/collection-point", middleware.handle, async(req:Request, res:Response)=>{
     const collectionPoint:CollectionPoint = new CollectionPoint();
 
     collectionPoint.createCollectionPoint(req, res);

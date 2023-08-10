@@ -21,11 +21,11 @@ newsletterRoutes.post("/newsletter", (req, res) => __awaiter(void 0, void 0, voi
     const newsletter = new newsletter_1.default();
     newsletter.registerEmail(req, res);
 }));
-newsletterRoutes.delete("/newsletter", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+newsletterRoutes.delete("/newsletter", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newsletter = new newsletter_1.default();
     newsletter.deleteEmail(req, res);
 }));
-newsletterRoutes.get("/newsletter", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+newsletterRoutes.get("/newsletter", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newsletter = new newsletter_1.default();
     newsletter.getAll(req, res);
 }));

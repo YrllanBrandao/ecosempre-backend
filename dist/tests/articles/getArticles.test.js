@@ -29,7 +29,7 @@ const server_1 = __importDefault(require("../../server"));
             .get("/api/v1/articles?limit=2&page=1");
         (0, globals_1.expect)(res.body.length).toBe(2);
     }));
-    (0, globals_1.afterAll)(() => {
+    (0, globals_1.afterAll)(() => __awaiter(void 0, void 0, void 0, function* () {
         process.env.NODE_ENV = "development";
-    });
+    }));
 });

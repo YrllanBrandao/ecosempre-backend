@@ -17,15 +17,15 @@ const tag_1 = __importDefault(require("../models/tag"));
 const middleware_1 = __importDefault(require("../auth/middleware"));
 const tagRoutes = express_1.default.Router();
 const middleware = new middleware_1.default();
-tagRoutes.post("/tag", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+tagRoutes.post("/tag", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tag = new tag_1.default();
     tag.createTag(req, res);
 }));
-tagRoutes.delete("/tag", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+tagRoutes.delete("/tag", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tag = new tag_1.default();
     tag.deleteTag(req, res);
 }));
-tagRoutes.get("/tags", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+tagRoutes.get("/tags", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tag = new tag_1.default();
     tag.getTags(req, res);
 }));

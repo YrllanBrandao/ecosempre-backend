@@ -158,7 +158,6 @@ class Article {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 for (const tag of tags) {
-                    console.log("ID?", tag);
                     const register = {
                         article_id: articleId,
                         tag_id: tag,

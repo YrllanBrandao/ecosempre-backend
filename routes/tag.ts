@@ -8,15 +8,15 @@ const tagRoutes: Router = express.Router();
 
 const middleware:Middleware = new Middleware();
 
-tagRoutes.post("/tag", async(req:Request, res:Response)=>{
+tagRoutes.post("/tag", middleware.handle, async(req:Request, res:Response)=>{
     const tag:Tag = new Tag();
     tag.createTag(req, res);
 })
-tagRoutes.delete("/tag", async(req:Request, res:Response)=>{
+tagRoutes.delete("/tag", middleware.handle, async(req:Request, res:Response)=>{
     const tag:Tag = new Tag();
     tag.deleteTag(req, res);
 })
-tagRoutes.get("/tags", async(req:Request, res:Response)=>{
+tagRoutes.get("/tags", middleware.handle, async(req:Request, res:Response)=>{
     const tag:Tag = new Tag();
     tag.getTags(req, res);
 })

@@ -12,17 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const collectionPoint_1 = __importDefault(require("../models/collectionPoint"));
-const middleware_1 = __importDefault(require("../auth/middleware"));
-const collectionPointRoutes = express_1.default.Router();
-const middleware = new middleware_1.default();
-collectionPointRoutes.post("/collection-point", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const collectionPoint = new collectionPoint_1.default();
-    collectionPoint.createCollectionPoint(req, res);
-}));
-collectionPointRoutes.get("/collection-points", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const collectionPoint = new collectionPoint_1.default();
-    collectionPoint.getAll(req, res);
-}));
-exports.default = collectionPointRoutes;
+const globals_1 = require("@jest/globals");
+const supertest_1 = __importDefault(require("supertest"));
+const server_1 = __importDefault(require("../../server"));
+(0, globals_1.describe)("Testing the endpoint /articles/[tagname]]", () => {
+    (0, globals_1.beforeAll)(() => {
+        process.env.NODE_ENV = "test";
+    });
+    (0, globals_1.it)("should return an Array", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield (0, supertest_1.default)(server_1.default).get("/api/v1/articles/ecologia");
+        (0, globals_1.expect)(res.status).toBe(200);
+        (0, globals_1.expect)(Array.isArray(res.body)).toBe(true);
+    }));
+    (0, globals_1.afterAll)(() => {
+        process.env.NODE_ENV = "development";
+    });
+});
