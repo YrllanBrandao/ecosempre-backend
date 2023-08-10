@@ -22,7 +22,7 @@ describe("GET /articles", ()=>{
 
         expect(res.body.length).toBe(2);
     })
-    afterAll(()=>{
+    afterAll(async ()=>{
       process.env.NODE_ENV="development";
     })
 })
