@@ -48,4 +48,4 @@
 | /newsletter | POST | Não |
 
 
-[Documentação](https://github.com/YrllanBrandao/EcoSempre-backend/blob/main/docs/doc.md)
+[Documentação](https://github.com/YrllanBrandao/ecosempre-backend/tree/main/doc)
