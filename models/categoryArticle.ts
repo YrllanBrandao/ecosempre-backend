@@ -30,8 +30,8 @@ class CategoryArticles{
             const exist:boolean = await this.verifyCategoryExistence(incompleteCategory.name);
 
             if(!exist){
-                const categoryId: number = await Connection('categoryArticles');
-
+                await Connection('categoryArticles');
+                res.sendStatus(201);
             }else{
                 res.sendStatus(409);
             }
