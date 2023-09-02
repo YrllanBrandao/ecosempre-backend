@@ -17,7 +17,6 @@ class CategoryArticle{
 
     private async verifyCategoryExistence(name:string){ 
         const category : object | undefined = await Connection('categoryArticles').select("*").where({name}).first();
-
         if(category === undefined){
             return false;
         }
@@ -31,7 +30,9 @@ class CategoryArticle{
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
             }
-            const exist:boolean = await this.verifyCategoryExistence(incompleteCategory.name);
+            const lowedName:string = category.name.toLowerCase();
+            category.name = lowedName;
+            const exist:boolean = await this.verifyCategoryExistence(lowedName);
 
             if(!exist){
                 await Connection('categoryArticles').insert(category);

@@ -32,7 +32,9 @@ class CategoryArticle {
             try {
                 const incompleteCategory = req.body;
                 const category = Object.assign(Object.assign({}, incompleteCategory), { createdAt: this.currentDate, updatedAt: this.currentDate });
-                const exist = yield this.verifyCategoryExistence(incompleteCategory.name);
+                const lowedName = category.name.toLowerCase();
+                category.name = lowedName;
+                const exist = yield this.verifyCategoryExistence(lowedName);
                 if (!exist) {
                     yield (0, connection_1.default)('categoryArticles').insert(category);
                     res.sendStatus(201);
