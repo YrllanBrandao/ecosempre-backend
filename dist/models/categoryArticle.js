@@ -36,7 +36,7 @@ class CategoryArticle {
                 category.name = lowedName;
                 const exist = yield this.verifyCategoryExistence(lowedName);
                 if (!exist) {
-                    yield (0, connection_1.default)('categoryArticles').insert(category);
+                    yield (0, connection_1.default)('categoryArticle').insert(category);
                     res.sendStatus(201);
                 }
                 else {
