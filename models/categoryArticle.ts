@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 import Connection from '../database/connection';
 import Static from '../static';
 
-interface ICategoryArticles{
+interface ICategoryArticle{
     name: string;
     createdAt ?: string;
     updatedAt ?: string;
 }
 
-class CategoryArticles{
+class CategoryArticle{
     private  currentDate = new Static().getCurrentDate();
 
     private async verifyCategoryExistence(name:string){ 
@@ -21,8 +21,8 @@ class CategoryArticles{
     }
     public async createCategory(req: Request, res:Response){
         try{
-            const incompleteCategory: ICategoryArticles = req.body;
-            const category:ICategoryArticles = {
+            const incompleteCategory: ICategoryArticle = req.body;
+            const category:ICategoryArticle = {
                 ...incompleteCategory,
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
@@ -42,3 +42,4 @@ class CategoryArticles{
 
     }
 }
+export default CategoryArticle;
