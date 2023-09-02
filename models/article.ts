@@ -5,7 +5,7 @@ import Static from "../static";
 import Connection from "../database/connection";
 import Mailer from '../mailer';
 
-interface IArticle {
+export interface IArticle {
     title: string;
     author: string;
     content: string;

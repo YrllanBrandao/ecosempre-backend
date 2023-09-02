@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
+
 import Connection from '../database/connection';
 import Static from '../static';
+import { IArticle } from './article';
 
 interface ICategoryArticle{
     name: string;
     createdAt ?: string;
     updatedAt ?: string;
 }
-
+interface ICategoryWithArticle extends IArticle{
+    category: number;
+}
 class CategoryArticle{
     private  currentDate = new Static().getCurrentDate();
 
@@ -41,5 +45,6 @@ class CategoryArticle{
         }
 
     }
+
 }
 export default CategoryArticle;
