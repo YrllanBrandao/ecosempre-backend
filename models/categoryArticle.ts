@@ -34,7 +34,7 @@ class CategoryArticle{
             const exist:boolean = await this.verifyCategoryExistence(incompleteCategory.name);
 
             if(!exist){
-                await Connection('categoryArticles');
+                await Connection('categoryArticles').insert(category);
                 res.sendStatus(201);
             }else{
                 res.sendStatus(409);
