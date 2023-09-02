@@ -89,7 +89,7 @@ class Article {
                 }
             }
             catch (error) {
-                res.status(400).send(error.message);
+                res.sendStatus(400);
             }
         });
         this.deleteArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -115,8 +115,30 @@ class Article {
                 if (result === null) {
                     const exists = yield this.verifyArticleBySlug(key);
                     if (exists) {
-                        const article = yield (0, connection_1.default)("articles").select("*").where({ slug: key }).first();
-                        res.status(200).send(article);
+                        const articleWithTags = {
+                            tags: [],
+                        };
+                        const article = yield (0, connection_1.default)("articles")
+                            .select("articles.*", "tags.name as tag_name")
+                            .where({ slug: key })
+                            .leftJoin("articleTag", "articles.id", "articleTag.article_id")
+                            .leftJoin("tags", "articleTag.tag_id", "tags.id");
+                        article.forEach((row) => {
+                            if (!articleWithTags.id) {
+                                articleWithTags.id = row.id;
+                                articleWithTags.title = row.title;
+                                articleWithTags.author = row.author;
+                                articleWithTags.content = row.content;
+                                articleWithTags.author_id = row.author_id;
+                                articleWithTags.slug = row.slug;
+                                articleWithTags.createdAt = row.createdAt;
+                                articleWithTags.updatedAt = row.updatedAt;
+                            }
+                            if (row.tag_name) {
+                                articleWithTags.tags.push(row.tag_name);
+                            }
+                        });
+                        res.status(200).send(articleWithTags);
                     }
                     else {
                         res.sendStatus(404);
@@ -164,7 +186,6 @@ class Article {
                         createdAt: this.currentDate,
                         updatedAt: this.currentDate
                     };
-                    console.log(register);
                     yield (0, connection_1.default)("articleTag").insert(register);
                 }
             }

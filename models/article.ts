@@ -19,7 +19,18 @@ interface IArticleTag{
     createdAt: string;
     updatedAt: string;
 }
-
+interface IArticleWithTags{
+    id?: number;
+    title?: string;
+    author?: string;
+    content?: string;
+    author_id?: number;
+    slug?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    tags: string[];
+                      
+}
 class Article {
     private currentDate: string = new Static().getCurrentDate();
 
@@ -39,8 +50,6 @@ class Article {
                 updatedAt: this.currentDate
                 
             }
-
-            console.log(register)
            
             await Connection("articleTag").insert(register);
         }
@@ -150,7 +159,7 @@ class Article {
 
         }
         catch (error: any) {
-            res.status(400).send(error.message)
+            res.sendStatus(400);
         }
     }
 
@@ -245,9 +254,35 @@ class Article {
                 const exists: boolean = await this.verifyArticleBySlug(key);
 
                 if (exists) {
-                    const article: boolean = await Connection("articles").select("*").where({ slug: key }).first();
+                    const articleWithTags: IArticleWithTags = {
+                        tags: [],
+                      };
+                      
+                      const article = await Connection("articles")
+                        .select("articles.*", "tags.name as tag_name")
+                        .where({ slug: key })
+                        .leftJoin("articleTag", "articles.id", "articleTag.article_id")
+                        .leftJoin("tags", "articleTag.tag_id", "tags.id");
+                      
+                      article.forEach((row) => {
+                        if (!articleWithTags.id) {
+                          articleWithTags.id = row.id;
+                          articleWithTags.title = row.title;
+                          articleWithTags.author = row.author;
+                          articleWithTags.content = row.content;
+                          articleWithTags.author_id = row.author_id;
+                          articleWithTags.slug = row.slug;
+                          articleWithTags.createdAt = row.createdAt;
+                          articleWithTags.updatedAt = row.updatedAt;
+                        }
 
-                    res.status(200).send(article);
+                        if (row.tag_name) {
+                          articleWithTags.tags.push(row.tag_name);
+                        }
+                      });
+                      
+                    
+                    res.status(200).send(articleWithTags);
                 }
                 else {
                     res.sendStatus(404);
