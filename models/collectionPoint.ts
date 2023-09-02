@@ -7,12 +7,13 @@ import Static from "../static";
 interface ICollectionPoint{
     name: string,
     address: string,
-    cep: string
-    category_id: number,
-    state: string
-    size: string
-    createdAt?:string,
-    updatedAt?:string
+    cep: string;
+    category_id?: number,
+    state: string;
+    city: string;
+    size: string;
+    createdAt?:string;
+    updatedAt?:string;
 }
 
 
@@ -73,6 +74,8 @@ class CollectionPoint{
             res.sendStatus(409);
         }
         else{
+          if(collectionPoint.category_id)
+          {
             const categoryExist:boolean = await this.checkCategorysExistence(Number(collectionPoint.category_id));
 
             if(categoryExist)
@@ -84,6 +87,13 @@ class CollectionPoint{
             else{
                 throw new Error("the category doesn't exist");
             }
+          }
+          else{
+
+            await Connection("collectionPoints").insert(collectionPoint);
+
+            res.sendStatus(201);
+          }
         }
     
        }

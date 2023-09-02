@@ -62,13 +62,19 @@ class CollectionPoint {
                     res.sendStatus(409);
                 }
                 else {
-                    const categoryExist = yield this.checkCategorysExistence(Number(collectionPoint.category_id));
-                    if (categoryExist) {
-                        yield (0, connection_1.default)("collectionPoints").insert(collectionPoint);
-                        res.sendStatus(201);
+                    if (collectionPoint.category_id) {
+                        const categoryExist = yield this.checkCategorysExistence(Number(collectionPoint.category_id));
+                        if (categoryExist) {
+                            yield (0, connection_1.default)("collectionPoints").insert(collectionPoint);
+                            res.sendStatus(201);
+                        }
+                        else {
+                            throw new Error("the category doesn't exist");
+                        }
                     }
                     else {
-                        throw new Error("the category doesn't exist");
+                        yield (0, connection_1.default)("collectionPoints").insert(collectionPoint);
+                        res.sendStatus(201);
                     }
                 }
             }
