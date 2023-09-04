@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = __importDefault(require("../database/connection"));
 const static_1 = __importDefault(require("../static"));
+const slugify_1 = __importDefault(require("slugify"));
 class CategoryArticles {
     constructor() {
         this.currentDate = new static_1.default().getCurrentDate();
@@ -32,7 +33,7 @@ class CategoryArticles {
             try {
                 const { name } = req.body;
                 const category = {
-                    name,
+                    name: (0, slugify_1.default)(name),
                     createdAt: this.currentDate,
                     updatedAt: this.currentDate
                 };

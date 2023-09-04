@@ -3,15 +3,14 @@ import { Request, Response } from 'express';
 import Connection from '../database/connection';
 import Static from '../static';
 import { IArticle } from './article';
+import slugify from 'slugify';
 
 interface ICategoryArticle{
     name: string;
     createdAt ?: string;
     updatedAt ?: string;
 }
-interface ICategoryWithArticle extends IArticle{
-    category: number;
-}
+
 class CategoryArticles{
     private  currentDate = new Static().getCurrentDate();
 
@@ -26,7 +25,7 @@ class CategoryArticles{
         try{
             const {name}:{name:string}= req.body;
             const category:ICategoryArticle = {
-                name,
+                name: slugify(name),
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
             }
