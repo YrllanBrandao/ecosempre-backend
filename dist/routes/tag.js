@@ -25,7 +25,7 @@ tagRoutes.delete("/tag", middleware.handle, (req, res) => __awaiter(void 0, void
     const tag = new tag_1.default();
     tag.deleteTag(req, res);
 }));
-tagRoutes.get("/tags", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+tagRoutes.get("/tags", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const tag = new tag_1.default();
     tag.getTags(req, res);
 }));
