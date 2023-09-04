@@ -52,5 +52,21 @@ class CategoryArticles {
             }
         });
     }
+    getCategories(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const categories = yield (0, connection_1.default)("categoryArticles").select("*").orderBy("id", "desc");
+                if (categories[0] !== undefined) {
+                    res.status(200).send(categories);
+                }
+                else {
+                    res.sendStatus(404);
+                }
+            }
+            catch (error) {
+                res.sendStatus(500);
+            }
+        });
+    }
 }
 exports.default = CategoryArticles;

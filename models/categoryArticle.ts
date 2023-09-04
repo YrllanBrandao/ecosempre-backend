@@ -47,5 +47,21 @@ class CategoryArticles{
 
     }
 
+    public async getCategories(req:Request, res:Response){
+        try{
+            const categories:ICategoryArticle[] = await Connection("categoryArticles").select("*").orderBy("id", "desc");
+
+            if(categories[0] !== undefined){
+                res.status(200).send(categories);
+            }
+            else{
+                res.sendStatus(404);
+            }
+        }
+        catch(error:any){
+        res.sendStatus(500);
+        }
+    }
+
 }
 export default CategoryArticles;
