@@ -24,9 +24,9 @@ class CategoryArticle{
     }
     public async createCategory(req: Request, res:Response){
         try{
-            const incompleteCategory: ICategoryArticle = req.body;
+            const {name}:{name:string}= req.body;
             const category:ICategoryArticle = {
-                ...incompleteCategory,
+                name,
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
             }
@@ -35,14 +35,14 @@ class CategoryArticle{
             const exist:boolean = await this.verifyCategoryExistence(lowedName);
 
             if(!exist){
-                await Connection('categoryArticle').insert(category);
+                await Connection('categoryArticles').insert(category);
                 res.sendStatus(201);
             }else{
                 res.sendStatus(409);
             }
         }
         catch(error: any){
-            res.sendStatus(400);
+            res.status(400).send(error.sqlMessage);
         }
 
     }

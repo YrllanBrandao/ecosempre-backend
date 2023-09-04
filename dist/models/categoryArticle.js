@@ -30,13 +30,17 @@ class CategoryArticle {
     createCategory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const incompleteCategory = req.body;
-                const category = Object.assign(Object.assign({}, incompleteCategory), { createdAt: this.currentDate, updatedAt: this.currentDate });
+                const { name } = req.body;
+                const category = {
+                    name,
+                    createdAt: this.currentDate,
+                    updatedAt: this.currentDate
+                };
                 const lowedName = category.name.toLowerCase();
                 category.name = lowedName;
                 const exist = yield this.verifyCategoryExistence(lowedName);
                 if (!exist) {
-                    yield (0, connection_1.default)('categoryArticle').insert(category);
+                    yield (0, connection_1.default)('categoryArticles').insert(category);
                     res.sendStatus(201);
                 }
                 else {
@@ -44,7 +48,7 @@ class CategoryArticle {
                 }
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.sqlMessage);
             }
         });
     }
