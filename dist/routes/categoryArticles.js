@@ -21,4 +21,8 @@ categoryArticlesRoutes.post("/category-article", middleware.handle, (req, res) =
     const categoryArticle = new categoryArticle_1.default();
     categoryArticle.createCategory(req, res);
 }));
+categoryArticlesRoutes.get("/category-article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryArticle = new categoryArticle_1.default();
+    categoryArticle.getCategories(req, res);
+}));
 exports.default = categoryArticlesRoutes;
