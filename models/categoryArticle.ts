@@ -12,7 +12,7 @@ interface ICategoryArticle{
 interface ICategoryWithArticle extends IArticle{
     category: number;
 }
-class CategoryArticle{
+class CategoryArticles{
     private  currentDate = new Static().getCurrentDate();
 
     private async verifyCategoryExistence(name:string){ 
@@ -48,4 +48,4 @@ class CategoryArticle{
     }
 
 }
-export default CategoryArticle;
+export default CategoryArticles;

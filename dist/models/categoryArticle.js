@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = __importDefault(require("../database/connection"));
 const static_1 = __importDefault(require("../static"));
-class CategoryArticle {
+class CategoryArticles {
     constructor() {
         this.currentDate = new static_1.default().getCurrentDate();
     }
@@ -53,4 +53,4 @@ class CategoryArticle {
         });
     }
 }
-exports.default = CategoryArticle;
+exports.default = CategoryArticles;
