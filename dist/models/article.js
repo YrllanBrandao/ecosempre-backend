@@ -236,7 +236,7 @@ class Article {
                 const pagination = this.verifyPagination(limit, page);
                 if (pagination) {
                     const offset = (Number(page) - 1) * Number(limit);
-                    const articles = yield (0, connection_1.default)("articles").select("*").limit(Number(limit)).offset(Number(offset));
+                    const articles = yield (0, connection_1.default)("articles").select("*").orderBy("id", 'desc').limit(Number(limit)).offset(Number(offset));
                     if (articles[0] === undefined) {
                         res.status(404).send("doesn't exists articles");
                     }
