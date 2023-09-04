@@ -21,10 +21,6 @@ articleRoutes.get("/articles", (req, res) => __awaiter(void 0, void 0, void 0, f
     const article = new article_1.default();
     article.getArticles(req, res);
 }));
-articleRoutes.get("/articles/:tag", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const article = new article_1.default();
-    article.getArticlesByTag(req, res);
-}));
 articleRoutes.post("/article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const article = new article_1.default();
     article.creatArticle(req, res);
@@ -45,5 +41,9 @@ articleRoutes.put("/article/:id", middleware.handle, (req, res) => __awaiter(voi
 articleRoutes.get("/articles/category/:category", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const article = new article_1.default();
     article.getArticlesByCategory(req, res);
+}));
+articleRoutes.get("/articles/tag/:tag", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const article = new article_1.default();
+    article.getArticlesByTag(req, res);
 }));
 exports.default = articleRoutes;

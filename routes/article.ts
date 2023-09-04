@@ -12,10 +12,7 @@ articleRoutes.get("/articles",  async (req: Request, res: Response) => {
     const article: Article = new Article();
     article.getArticles(req, res);
 })
-articleRoutes.get("/articles/:tag",  async (req: Request, res: Response) => {
-    const article: Article = new Article();
-    article.getArticlesByTag(req, res);
-})
+
 
 articleRoutes.post("/article", middleware.handle, async (req: Request, res: Response) => {
     const article: Article = new Article();
@@ -40,6 +37,9 @@ articleRoutes.get("/articles/category/:category", async (req: Request, res: Resp
     const article: Article = new Article();
     article.getArticlesByCategory(req, res);
 })
-
+articleRoutes.get("/articles/tag/:tag",  async (req: Request, res: Response) => {
+    const article: Article = new Article();
+    article.getArticlesByTag(req, res);
+})
 
 export default articleRoutes;
