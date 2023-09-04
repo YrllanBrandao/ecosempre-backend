@@ -117,12 +117,15 @@ class Article {
                     if (exists) {
                         const articleWithTags = {
                             tags: [],
+                            categories: []
                         };
                         const article = yield (0, connection_1.default)("articles")
-                            .select("articles.*", "tags.name as tag_name")
+                            .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
                             .where({ slug: key })
                             .leftJoin("articleTag", "articles.id", "articleTag.article_id")
-                            .leftJoin("tags", "articleTag.tag_id", "tags.id");
+                            .leftJoin("tags", "articleTag.tag_id", "tags.id")
+                            .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
+                            .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id");
                         article.forEach((row) => {
                             if (!articleWithTags.id) {
                                 articleWithTags.id = row.id;
@@ -135,7 +138,14 @@ class Article {
                                 articleWithTags.updatedAt = row.updatedAt;
                             }
                             if (row.tag_name) {
-                                articleWithTags.tags.push(row.tag_name);
+                                if (!articleWithTags.tags.includes(row.tag_name)) {
+                                    articleWithTags.tags.push(row.tag_name);
+                                }
+                            }
+                            if (row.category_name) {
+                                if (!articleWithTags.categories.includes(row.category_name)) {
+                                    articleWithTags.categories.push(row.category_name);
+                                }
                             }
                         });
                         res.status(200).send(articleWithTags);
