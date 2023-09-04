@@ -41,4 +41,9 @@ articleRoutes.put("/article/:id", middleware.handle, (req, res) => __awaiter(voi
     const article = new article_1.default();
     article.updateArticle(req, res);
 }));
+// get articles by key
+articleRoutes.get("/article/category/:category", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const article = new article_1.default();
+    article.getArticlesByCategory(req, res);
+}));
 exports.default = articleRoutes;
