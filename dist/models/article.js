@@ -255,5 +255,26 @@ class Article {
             }
         });
     }
+    getArticlesByCategory(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const category = req.params.category;
+                const articleWithCategory = {
+                    categories: []
+                };
+                if (category === '') {
+                    throw new Error("Invalid category!");
+                }
+                const articlesWithGivenCategory = yield (0, connection_1.default)("articles").select("articles.*", "categoryArticles.name as categories")
+                    .leftJoin("categoryArticle", "article_id", "articles.id")
+                    .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
+                    .where({ "name": category });
+                res.status(200).send(articlesWithGivenCategory);
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
 }
 exports.default = Article;

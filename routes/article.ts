@@ -36,7 +36,7 @@ articleRoutes.put("/article/:id", middleware.handle, async (req: Request, res: R
     article.updateArticle(req, res);
 })
 // get articles by key
-articleRoutes.get("/article/category/:category", async (req: Request, res: Response) => {
+articleRoutes.get("/articles/category/:category", async (req: Request, res: Response) => {
     const article: Article = new Article();
     article.getArticlesByCategory(req, res);
 })

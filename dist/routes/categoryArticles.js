@@ -13,16 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const categoryArticle_1 = __importDefault(require("../models/categoryArticle"));
+const categoryArticles_1 = __importDefault(require("../models/categoryArticles"));
 const middleware_1 = __importDefault(require("../auth/middleware"));
-const categoryArticlesRoutes = express_1.default.Router();
+const categoryArticlessRoutes = express_1.default.Router();
 const middleware = new middleware_1.default();
-categoryArticlesRoutes.post("/category-article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const categoryArticle = new categoryArticle_1.default();
-    categoryArticle.createCategory(req, res);
+categoryArticlessRoutes.post("/category-article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryArticles = new categoryArticles_1.default();
+    categoryArticles.createCategory(req, res);
 }));
-categoryArticlesRoutes.get("/category-article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const categoryArticle = new categoryArticle_1.default();
-    categoryArticle.getCategories(req, res);
+categoryArticlessRoutes.get("/category-article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryArticles = new categoryArticles_1.default();
+    categoryArticles.getCategories(req, res);
 }));
-exports.default = categoryArticlesRoutes;
+exports.default = categoryArticlessRoutes;

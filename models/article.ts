@@ -6,11 +6,14 @@ import Connection from "../database/connection";
 import Mailer from '../mailer';
 
 export interface IArticle {
+    id?: number;
     title: string;
     author: string;
     content: string;
     slug: string;
     author_id: number;
+    createdAt ?: string;
+    updatedAt ?: string;
 }
 
 interface IArticleTag{
@@ -30,6 +33,17 @@ interface IArticleWithTags{
     updatedAt?: Date;
     tags: string[];
                       
+}
+interface IArticleWithCategory {
+    id?: number;
+    title?: string;
+    author?: string;
+    content?: string;
+    author_id?: number;
+    slug?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    categories: string[];
 }
 class Article {
     private currentDate: string = new Static().getCurrentDate();
@@ -307,6 +321,28 @@ class Article {
         }
     }
 
+    public async getArticlesByCategory(req:Request, res:Response){
+            try{
+                const category:string  = req.params.category;
+
+                const articleWithCategory:IArticleWithCategory = {
+                    categories : []
+                }
+            if(category === ''){
+                throw new Error("Invalid category!");
+            }
+            const articlesWithGivenCategory:IArticleWithCategory[] = await Connection("articles").select("articles.*",  "categoryArticles.name as categories")
+            .leftJoin("categoryArticle", "article_id", "articles.id")
+            .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
+            .where({"name": category})
+            
+
+            res.status(200).send(articlesWithGivenCategory);
+            }
+            catch(error:any){
+                res.status(400).send(error.message);
+            }
+    }
 
     public updateArticle = async (req: Request, res: Response) => {
 
