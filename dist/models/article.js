@@ -265,7 +265,7 @@ class Article {
                 const articlesWithGivenCategory = yield (0, connection_1.default)("articles").select("articles.*", "categoryArticles.name as categories")
                     .leftJoin("categoryArticle", "article_id", "articles.id")
                     .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
-                    .where({ "name": category });
+                    .where({ "name": (0, slugify_1.default)(category) });
                 res.status(200).send(articlesWithGivenCategory);
             }
             catch (error) {

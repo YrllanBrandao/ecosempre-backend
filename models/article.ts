@@ -330,7 +330,7 @@ class Article {
             const articlesWithGivenCategory:IArticleWithCategory[] = await Connection("articles").select("articles.*",  "categoryArticles.name as categories")
             .leftJoin("categoryArticle", "article_id", "articles.id")
             .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
-            .where({"name": category})
+            .where({"name": slugify(category)});
             
 
             res.status(200).send(articlesWithGivenCategory);
