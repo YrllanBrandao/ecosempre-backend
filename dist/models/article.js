@@ -259,9 +259,6 @@ class Article {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const category = req.params.category;
-                const articleWithCategory = {
-                    categories: []
-                };
                 if (category === '') {
                     throw new Error("Invalid category!");
                 }

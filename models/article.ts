@@ -324,10 +324,6 @@ class Article {
     public async getArticlesByCategory(req:Request, res:Response){
             try{
                 const category:string  = req.params.category;
-
-                const articleWithCategory:IArticleWithCategory = {
-                    categories : []
-                }
             if(category === ''){
                 throw new Error("Invalid category!");
             }
