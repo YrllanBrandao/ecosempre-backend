@@ -5,6 +5,7 @@ import Static from "../static";
 import Connection from "../database/connection";
 import Mailer from '../mailer';
 
+
 export interface IArticle {
     id?: number;
     title: string;
@@ -16,6 +17,12 @@ export interface IArticle {
     updatedAt ?: string;
 }
 
+interface ICategoryArticle{
+    article_id: number
+    category_id: number,
+    createdAt: string,
+    updatedAt: string
+}
 interface IArticleTag{
     article_id:  number;
     tag_id: number;
@@ -67,6 +74,32 @@ class Article {
             }
            
             await Connection("articleTag").insert(register);
+        }
+
+       }
+       catch(error:any)
+       {
+        throw error;
+       }
+       
+    }
+    private async registerCategoryArticle(categories:number[], articleId:number):Promise<void>
+    {
+      
+    
+       try{
+        for(const category of categories )
+        {
+          
+           
+            const register:ICategoryArticle = {
+                article_id: articleId,
+                category_id: category,
+                createdAt: this.currentDate,
+                updatedAt: this.currentDate
+            }
+           
+            await Connection("categoryArticle").insert(register);
         }
 
        }
@@ -131,9 +164,8 @@ class Article {
 
         try {
             const article: IArticle = req.body;
-            const {tags_ids}:{tags_ids:number[]} = req.body;
+            const {tags_ids, categories}:{tags_ids:number[], categories:number[]} = req.body;
 
-            console.log(">>", tags_ids)
             const isValid: boolean = this.articleValidate(article);
             const mailer:Mailer = new Mailer();
             if (isValid) {
@@ -157,6 +189,7 @@ class Article {
 
                    const articleId:number =  Number(await Connection("articles").insert(fullArticle));
                    await this.registerArticleTags(tags_ids, articleId);
+                   await this.registerCategoryArticle(categories, articleId);
                     await mailer.sendBatchEmails({
                         slug: slugify(article.title),
                         title: article.title

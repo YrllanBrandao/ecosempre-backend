@@ -56,8 +56,7 @@ class Article {
         this.creatArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const article = req.body;
-                const { tags_ids } = req.body;
-                console.log(">>", tags_ids);
+                const { tags_ids, categories } = req.body;
                 const isValid = this.articleValidate(article);
                 const mailer = new mailer_1.default();
                 if (isValid) {
@@ -77,6 +76,7 @@ class Article {
                         };
                         const articleId = Number(yield (0, connection_1.default)("articles").insert(fullArticle));
                         yield this.registerArticleTags(tags_ids, articleId);
+                        yield this.registerCategoryArticle(categories, articleId);
                         yield mailer.sendBatchEmails({
                             slug: (0, slugify_1.default)(article.title),
                             title: article.title
@@ -197,6 +197,24 @@ class Article {
                         updatedAt: this.currentDate
                     };
                     yield (0, connection_1.default)("articleTag").insert(register);
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    registerCategoryArticle(categories, articleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                for (const category of categories) {
+                    const register = {
+                        article_id: articleId,
+                        category_id: category,
+                        createdAt: this.currentDate,
+                        updatedAt: this.currentDate
+                    };
+                    yield (0, connection_1.default)("categoryArticle").insert(register);
                 }
             }
             catch (error) {
