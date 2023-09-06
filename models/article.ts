@@ -309,7 +309,7 @@ class Article {
                       
                       const article = await Connection("articles")
                         .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
-                        .where({ slug: key.toLowerCase() })
+                        .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                         .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                         .leftJoin("tags", "articleTag.tag_id", "tags.id")
                         .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")

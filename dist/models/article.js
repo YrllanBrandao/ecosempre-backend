@@ -66,7 +66,7 @@ class Article {
                     }
                     else {
                         const fullArticle = {
-                            title: article.title,
+                            title: article.title.toLowerCase(),
                             content: article.content,
                             author: article.author,
                             author_id: article.author_id,
@@ -121,7 +121,7 @@ class Article {
                         };
                         const article = yield (0, connection_1.default)("articles")
                             .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
-                            .where({ slug: key })
+                            .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                             .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                             .leftJoin("tags", "articleTag.tag_id", "tags.id")
                             .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
