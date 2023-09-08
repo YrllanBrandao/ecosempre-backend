@@ -67,7 +67,7 @@ class Article {
                     }
                     else {
                         const fullArticle = {
-                            title: article.title.toLowerCase(),
+                            title: article.title,
                             content: article.content,
                             thumbnail_url: article.thumbnail_url,
                             author: article.author,
