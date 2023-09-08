@@ -58,8 +58,9 @@ class Article {
                 const article = req.body;
                 const { tags_ids, categories } = req.body;
                 const isValid = this.articleValidate(article);
+                const categoriesAndTagsAreValids = this.validateTagAndCategory(categories, tags_ids);
                 const mailer = new mailer_1.default();
-                if (isValid) {
+                if (isValid && categoriesAndTagsAreValids) {
                     const exist = yield this.verifyArticleByTitle(article.title);
                     if (exist) {
                         res.status(409).send("The article already exists!");
@@ -85,7 +86,7 @@ class Article {
                     }
                 }
                 else {
-                    throw new Error("is not valid");
+                    throw new Error("an error has ocurred");
                 }
             }
             catch (error) {
@@ -185,6 +186,12 @@ class Article {
                 return res.sendStatus(400);
             }
         });
+    }
+    validateTagAndCategory(categories, tags) {
+        if (categories.length <= 0 || categories.length > 2 || tags.length <= 0 || tags.length > 3) {
+            return false;
+        }
+        return true;
     }
     registerArticleTags(tags, articleId) {
         return __awaiter(this, void 0, void 0, function* () {

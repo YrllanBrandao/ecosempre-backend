@@ -56,6 +56,13 @@ interface IArticleWithCategory {
 class Article {
     private currentDate: string = new Static().getCurrentDate();
 
+    private validateTagAndCategory (categories:number[], tags:number[]):boolean{
+
+        if(categories.length <= 0 || categories.length > 2 || tags.length <= 0 || tags.length > 3){
+            return false;
+        }
+        return true;
+    }
     private async registerArticleTags(tags:number[], articleId:number):Promise<void>
     {
       
@@ -167,8 +174,9 @@ class Article {
             const {tags_ids, categories}:{tags_ids:number[], categories:number[]} = req.body;
 
             const isValid: boolean = this.articleValidate(article);
+            const categoriesAndTagsAreValids:boolean = this.validateTagAndCategory(categories, tags_ids);
             const mailer:Mailer = new Mailer();
-            if (isValid) {
+            if (isValid && categoriesAndTagsAreValids) {
                 const exist: boolean = await this.verifyArticleByTitle(article.title);
 
                 if (exist) {
@@ -202,7 +210,7 @@ class Article {
                 }
             }
             else {
-                throw new Error("is not valid");
+                throw new Error("an error has ocurred");
             }
 
         }
@@ -220,7 +228,7 @@ class Article {
             if (!exist) {
                 res.status(404).send("the articles dosn't exists!");
             }
-
+            
             await Connection("articles").delete("*").where({ id });
             res.status(200).send("Deleted");
         }
