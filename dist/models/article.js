@@ -100,6 +100,8 @@ class Article {
                 if (!exist) {
                     res.status(404).send("the articles dosn't exists!");
                 }
+                yield (0, connection_1.default)("articleTag").delete("*").where({ article_id: id });
+                yield (0, connection_1.default)("categoryArticle").delete("*").where({ article_id: id });
                 yield (0, connection_1.default)("articles").delete("*").where({ id });
                 res.status(200).send("Deleted");
             }

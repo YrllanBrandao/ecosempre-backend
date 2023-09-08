@@ -228,7 +228,8 @@ class Article {
             if (!exist) {
                 res.status(404).send("the articles dosn't exists!");
             }
-            
+            await Connection("articleTag").delete("*").where({article_id: id});
+            await Connection("categoryArticle").delete("*").where({article_id: id});
             await Connection("articles").delete("*").where({ id });
             res.status(200).send("Deleted");
         }
