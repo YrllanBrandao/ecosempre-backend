@@ -11,6 +11,7 @@ export interface IArticle {
     title: string;
     author: string;
     content: string;
+    thumbnail_url: string;
     slug: string;
     author_id: number;
     createdAt ?: string;
@@ -34,6 +35,7 @@ interface IArticleWithTags{
     title?: string;
     author?: string;
     content?: string;
+    thumbnail_url?: string;
     author_id?: number;
     slug?: string;
     createdAt?: Date;
@@ -188,6 +190,7 @@ class Article {
                     const fullArticle: object = {
                         title: article.title.toLowerCase(),
                         content: article.content,
+                        thumbnail_url: article.thumbnail_url,
                         author: article.author,
                         author_id: article.author_id,
                         createdAt: this.currentDate,
@@ -331,6 +334,7 @@ class Article {
                           articleWithTags.title = row.title;
                           articleWithTags.author = row.author;
                           articleWithTags.content = row.content;
+                          articleWithTags.thumbnail_url = row.thumbnail_url;
                           articleWithTags.author_id = row.author_id;
                           articleWithTags.slug = row.slug;
                           articleWithTags.createdAt = row.createdAt;
