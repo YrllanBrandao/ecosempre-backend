@@ -29,9 +29,7 @@ class CategoryArticles{
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
             }
-            const lowedName:string = category.name;
-            category.name = lowedName;
-            const exist:boolean = await this.verifyCategoryExistence(lowedName);
+            const exist:boolean = await this.verifyCategoryExistence(name);
 
             if(!exist){
                 await Connection('categoryArticles').insert(category);
