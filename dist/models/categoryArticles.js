@@ -37,7 +37,7 @@ class CategoryArticles {
                     createdAt: this.currentDate,
                     updatedAt: this.currentDate
                 };
-                const lowedName = category.name.toLowerCase();
+                const lowedName = category.name;
                 category.name = lowedName;
                 const exist = yield this.verifyCategoryExistence(lowedName);
                 if (!exist) {

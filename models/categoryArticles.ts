@@ -29,7 +29,7 @@ class CategoryArticles{
                 createdAt: this.currentDate,
                 updatedAt: this.currentDate
             }
-            const lowedName:string = category.name.toLowerCase();
+            const lowedName:string = category.name;
             category.name = lowedName;
             const exist:boolean = await this.verifyCategoryExistence(lowedName);
 
