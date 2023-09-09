@@ -60,7 +60,7 @@ class Article {
 
     private validateTagAndCategory (categories:number[], tags:number[]):boolean{
 
-        if(categories.length <= 0 || categories.length > 2 || tags.length <= 0 || tags.length > 3){
+        if(categories.length <= 0 || categories.length > 3 || tags.length <= 0 || tags.length > 3){
             return false;
         }
         return true;
@@ -280,14 +280,67 @@ class Article {
 
             const pagination: boolean = this.verifyPagination(limit, page);
             if (pagination) {
+                const fullArticles:IArticleWithTags[] = [];
                 const offset = (Number(page) - 1) * Number(limit)
-                const articles: string[] = await Connection("articles").select("*").orderBy("id", 'desc').limit(Number(limit)).offset(Number(offset));
+                const articles = await Connection("articles")
+                .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
+                .orderBy("id", "desc")
+                .limit(Number(limit))
+                .offset(Number(offset))
+                .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
+                .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
+                .leftJoin("articleTag", "articles.id", "articleTag.article_id")
+                .leftJoin("tags", "articleTag.tag_id", "tags.id")
+               
 
                 if (articles[0] === undefined) {
                     res.status(404).send("doesn't exists articles");
                 }
-                
-                res.status(200).send(articles);
+
+                const savedArticles: string[] = [];
+
+                // add each article into fullArticles
+                articles.forEach(row =>{
+                    
+                    const newArticle:IArticleWithTags = {
+                        id: row.id,
+                        title: row.title,
+                        author: row.author,
+                        content: row.content,
+                        thumbnail_url: row.thumbnail_url,
+                        slug: row.slug,
+                        author_id: row.author_id,
+                        tags: [],
+                        categories: []
+                    }
+                    
+
+                    if(row.categories_names && row.tags_names && !newArticle.categories.includes(row.categories_names))
+                    {
+                            
+                           
+                            if(!savedArticles.includes(row.id)){
+                                savedArticles.push(row.id);
+                                fullArticles.push(newArticle);
+                            }
+                            else{
+
+                                fullArticles.forEach(savedArticle =>{
+                                    if(savedArticle.id === row.id){
+                                        if(!savedArticle['categories'].includes(row.categories_names)){
+                                            savedArticle['categories'].push(row.categories_names);
+                                        }
+                                
+                                        if(!savedArticle['tags'].includes(row.tags_names)){
+                                            savedArticle['tags'].push(row.tags_names);
+                                        }
+                                    }
+                                })
+                            }
+                        
+                    }
+                })
+                res.status(200).send(fullArticles);
             }
             else {
                 const articles: string[] = await Connection("articles").select("*");
