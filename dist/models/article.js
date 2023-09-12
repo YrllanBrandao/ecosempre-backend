@@ -279,7 +279,7 @@ class Article {
                     const articles = yield (0, connection_1.default)("articles")
                         .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
                         .orderBy("id", "desc")
-                        .limit(Number(limit))
+                        .limit(Number(limit) * 4)
                         .offset(Number(offset))
                         .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
                         .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
@@ -300,7 +300,9 @@ class Article {
                             slug: row.slug,
                             author_id: row.author_id,
                             tags: [],
-                            categories: []
+                            categories: [],
+                            createdAt: row.createdAt,
+                            updatedAt: row.updatedAt
                         };
                         if (row.categories_names && row.tags_names && !newArticle.categories.includes(row.categories_names)) {
                             if (!savedArticles.includes(row.id)) {
@@ -324,11 +326,53 @@ class Article {
                     res.status(200).send(fullArticles);
                 }
                 else {
-                    const articles = yield (0, connection_1.default)("articles").select("*");
+                    const fullArticles = [];
+                    const articles = yield (0, connection_1.default)("articles")
+                        .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
+                        .orderBy("id", "desc")
+                        .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
+                        .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
+                        .leftJoin("articleTag", "articles.id", "articleTag.article_id")
+                        .leftJoin("tags", "articleTag.tag_id", "tags.id");
                     if (articles[0] === undefined) {
-                        res.sendStatus(404);
+                        res.status(404).send("doesn't exists articles");
                     }
-                    res.status(200).send(articles);
+                    const savedArticles = [];
+                    // add each article into fullArticles
+                    articles.forEach(row => {
+                        const newArticle = {
+                            id: row.id,
+                            title: row.title,
+                            author: row.author,
+                            content: row.content,
+                            thumbnail_url: row.thumbnail_url,
+                            slug: row.slug,
+                            author_id: row.author_id,
+                            tags: [],
+                            categories: [],
+                            createdAt: row.createdAt,
+                            updatedAt: row.updatedAt
+                        };
+                        if (row.categories_names && row.tags_names && !newArticle.categories.includes(row.categories_names)) {
+                            if (!savedArticles.includes(row.id)) {
+                                savedArticles.push(row.id);
+                                fullArticles.push(newArticle);
+                            }
+                            else {
+                                fullArticles.forEach(savedArticle => {
+                                    if (savedArticle.id === row.id) {
+                                        if (!savedArticle['categories'].includes(row.categories_names)) {
+                                            savedArticle['categories'].push(row.categories_names);
+                                        }
+                                        if (!savedArticle['tags'].includes(row.tags_names)) {
+                                            savedArticle['tags'].push(row.tags_names);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    res.status(200).send(fullArticles);
                 }
             }
             catch (error) {
