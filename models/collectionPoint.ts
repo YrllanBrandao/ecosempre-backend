@@ -134,7 +134,7 @@ class CollectionPoint{
     public async updateCollectionPoint(req:Request, res:Response){
         try{
             const collectionPoint:Partial<ICollectionPoint> = req.body;
-
+            collectionPoint.updatedAt = this.currentDate;
             const exists:boolean = await this.checkCollectionPointsExistence(Number(collectionPoint.id));
 
             if(exists){

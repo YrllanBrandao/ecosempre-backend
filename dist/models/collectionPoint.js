@@ -111,6 +111,7 @@ class CollectionPoint {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const collectionPoint = req.body;
+                collectionPoint.updatedAt = this.currentDate;
                 const exists = yield this.checkCollectionPointsExistence(Number(collectionPoint.id));
                 if (exists) {
                     yield (0, connection_1.default)("collectionPoints").update(collectionPoint).where({ id: collectionPoint.id });
