@@ -24,5 +24,11 @@ categoryRoutes.post("/category-collection-points", middleware.handle, async(req:
     categoryCollectionPoints.createCategory(req, res);
 })
 
+categoryRoutes.delete("/category-collection-points", middleware.handle, async(req:Request, res:Response)=>{
+    const categoryCollectionPoints:CategoryCollectionPoints = new CategoryCollectionPoints();
+
+    categoryCollectionPoints.createCategory(req, res);
+})
+
 
 export default categoryRoutes;
