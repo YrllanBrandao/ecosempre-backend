@@ -80,11 +80,12 @@ class CategoryCollectionPoints {
                 if (!exists) {
                     res.sendStatus(404);
                 }
+                yield (0, connection_1.default)("collectionPoints").update({ category_id: null }).where({ category_id: id });
                 yield (0, connection_1.default)("categoriesCollectionPoints").delete("*").where({ id });
                 res.sendStatus(200);
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.message);
             }
         });
     }

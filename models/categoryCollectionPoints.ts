@@ -91,11 +91,14 @@ class CategoryCollectionPoints{
             res.sendStatus(404);
         }
 
+
+        await Connection("collectionPoints").update({category_id: null}).where({category_id: id});
         await Connection("categoriesCollectionPoints").delete("*").where({id});
+        
         res.sendStatus(200);
         }
         catch(error:any){
-            res.sendStatus(400);
+            res.status(400).send(error.message);
         }
     }
 }
