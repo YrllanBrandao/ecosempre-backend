@@ -107,5 +107,20 @@ class CollectionPoint {
             }
         });
     }
+    updateCollectionPoint(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const collectionPoint = req.body;
+                const exists = yield this.checkCollectionPointsExistence(Number(collectionPoint.id));
+                if (exists) {
+                    yield (0, connection_1.default)("collectionPoints").update(collectionPoint).where({ id: collectionPoint.id });
+                    res.sendStatus(200);
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
 }
 exports.default = CollectionPoint;

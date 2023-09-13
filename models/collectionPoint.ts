@@ -5,6 +5,7 @@ import Static from "../static";
 
 
 interface ICollectionPoint{
+    id?: string
     name: string,
     address: string,
     cep: string;
@@ -129,6 +130,21 @@ class CollectionPoint{
             res.status(400).send(error.message);
         }
 
+    }
+    public async updateCollectionPoint(req:Request, res:Response){
+        try{
+            const collectionPoint:Partial<ICollectionPoint> = req.body;
+
+            const exists:boolean = await this.checkCollectionPointsExistence(Number(collectionPoint.id));
+
+            if(exists){
+                await Connection("collectionPoints").update(collectionPoint).where({id: collectionPoint.id});
+                res.sendStatus(200);
+            }
+        }
+        catch(error:any){
+            res.status(400).send(error.message);
+        }
     }
 }
 
