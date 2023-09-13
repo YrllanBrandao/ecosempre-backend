@@ -27,7 +27,7 @@ categoryRoutes.post("/category-collection-points", middleware.handle, async(req:
 categoryRoutes.delete("/category-collection-points", middleware.handle, async(req:Request, res:Response)=>{
     const categoryCollectionPoints:CategoryCollectionPoints = new CategoryCollectionPoints();
 
-    categoryCollectionPoints.createCategory(req, res);
+    categoryCollectionPoints.delete(req, res);
 })
 
 
