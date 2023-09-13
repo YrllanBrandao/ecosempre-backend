@@ -90,12 +90,12 @@ class CategoryCollectionPoints{
         if(!exists){
             res.sendStatus(404);
         }
-
-
-        await Connection("collectionPoints").update({category_id: null}).where({category_id: id});
-        await Connection("categoriesCollectionPoints").delete("*").where({id});
-        
-        res.sendStatus(200);
+        else{
+            await Connection("collectionPoints").update({category_id: null}).where({category_id: id})
+            await Connection("categoriesCollectionPoints").delete("*").where({id});
+            
+            res.sendStatus(200);
+        }
         }
         catch(error:any){
             res.status(400).send(error.message);
