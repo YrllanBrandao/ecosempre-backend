@@ -91,5 +91,23 @@ class CategoryCollectionPoints {
             }
         });
     }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const categoryCollectionPoint = req.body;
+                const exists = yield this.checkExistenceById(Number(categoryCollectionPoint.id));
+                if (!exists) {
+                    res.sendStatus(404);
+                }
+                else {
+                    yield (0, connection_1.default)("collectionPoints").update(categoryCollectionPoint).where({ id: categoryCollectionPoint.id });
+                    res.sendStatus(200);
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
 }
 exports.default = CategoryCollectionPoints;

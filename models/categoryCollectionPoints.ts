@@ -7,6 +7,7 @@ import Static from "../static";
 
 
 interface ICategoriesCollectionPoints{
+    id?: string,
     name: string,
     createdAt?: string,
     updatedAt?: string,
@@ -94,6 +95,24 @@ class CategoryCollectionPoints{
             await Connection("collectionPoints").update({category_id: null}).where({category_id: id})
             await Connection("categoriesCollectionPoints").delete("*").where({id});
             
+            res.sendStatus(200);
+        }
+        }
+        catch(error:any){
+            res.status(400).send(error.message);
+        }
+    }
+    public async update(req:Request, res:Response){
+        try{
+            const categoryCollectionPoint : ICategoriesCollectionPoints = req.body;
+
+        const exists:boolean = await this.checkExistenceById(Number(categoryCollectionPoint.id));
+
+        if(!exists){
+            res.sendStatus(404);
+        }
+        else{
+            await Connection("collectionPoints").update(categoryCollectionPoint).where({id: categoryCollectionPoint.id});
             res.sendStatus(200);
         }
         }
