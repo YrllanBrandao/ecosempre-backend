@@ -112,7 +112,7 @@ class CategoryCollectionPoints{
             res.sendStatus(404);
         }
         else{
-            await Connection("collectionPoints").update(categoryCollectionPoint).where({id: categoryCollectionPoint.id});
+            await Connection("categoriesCollectionPoints").update(categoryCollectionPoint).where({id: categoryCollectionPoint.id});
             res.sendStatus(200);
         }
         }

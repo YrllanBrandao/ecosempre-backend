@@ -100,7 +100,7 @@ class CategoryCollectionPoints {
                     res.sendStatus(404);
                 }
                 else {
-                    yield (0, connection_1.default)("collectionPoints").update(categoryCollectionPoint).where({ id: categoryCollectionPoint.id });
+                    yield (0, connection_1.default)("categoriesCollectionPoints").update(categoryCollectionPoint).where({ id: categoryCollectionPoint.id });
                     res.sendStatus(200);
                 }
             }

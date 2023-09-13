@@ -29,4 +29,8 @@ categoryRoutes.delete("/category-collection-points", middleware.handle, (req, re
     const categoryCollectionPoints = new categoryCollectionPoints_1.default();
     categoryCollectionPoints.delete(req, res);
 }));
+categoryRoutes.put("/category-collection-points", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryCollectionPoints = new categoryCollectionPoints_1.default();
+    categoryCollectionPoints.update(req, res);
+}));
 exports.default = categoryRoutes;
