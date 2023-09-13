@@ -49,5 +49,19 @@ class CategoryCollectionPoints {
             }
         });
     }
+    getAll(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const categories = yield (0, connection_1.default)("categoryCollectionPoints").select("*");
+                if (categories[0] === undefined) {
+                    res.sendStatus(404);
+                }
+                res.status(200).send(categories);
+            }
+            catch (error) {
+                res.sendStatus(400);
+            }
+        });
+    }
 }
 exports.default = CategoryCollectionPoints;
