@@ -12,6 +12,12 @@ import Middleware from '../auth/middleware';
 
 const middleware:Middleware = new Middleware();
 
+categoryRoutes.get("/categories-collection-points", async(req:Request, res:Response)=>{
+    const categoryCollectionPoints:CategoryCollectionPoints = new CategoryCollectionPoints();
+
+    categoryCollectionPoints.getAll(req, res);
+})
+
 categoryRoutes.post("/category-collection-points", middleware.handle, async(req:Request, res:Response)=>{
     const categoryCollectionPoints:CategoryCollectionPoints = new CategoryCollectionPoints();
 
