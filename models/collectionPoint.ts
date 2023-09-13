@@ -22,13 +22,24 @@ class CollectionPoint{
     constructor(){}
     private currentDate:string = new Static().getCurrentDate();
 
-    private async checkCollectionPointsExistence(cep:string)
+    private async checkCollectionPointsExistence(key:string|number)
     {
-        const query:object | undefined = await Connection("collectionPoints").select("*").where({cep}).first();
+        if(typeof key === 'string'){
+            const query:object | undefined = await Connection("collectionPoints").select("*").where({cep: key}).first();
 
         if(query === undefined)
         {
             return false;
+        }
+       
+        }
+        if(typeof key === 'number'){
+            const query:object | undefined = await Connection("collectionPoints").select("*").where({id: key}).first();
+
+        if(query === undefined)
+        {
+            return false;
+        }
         }
         return true;
     }
@@ -101,6 +112,23 @@ class CollectionPoint{
        {
         res.status(400).send(error.message);
        }
+    }
+    public async deleteCollectionPoint(req:Request, res:Response){
+        try{
+            const {id}:{id:number} = req.body;
+
+        const exists:boolean = await this.checkCollectionPointsExistence(Number(id));
+
+        if(!exists){
+            throw new Error("The Collection doesn't exists")
+        }
+        await Connection("categoryCollectionPoints").delete("*").where({id});
+            res.sendStatus(200);
+        }
+        catch(error:any){
+            res.status(400).send(error.message);
+        }
+
     }
 }
 

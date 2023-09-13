@@ -18,11 +18,19 @@ class CollectionPoint {
     constructor() {
         this.currentDate = new static_1.default().getCurrentDate();
     }
-    checkCollectionPointsExistence(cep) {
+    checkCollectionPointsExistence(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            const query = yield (0, connection_1.default)("collectionPoints").select("*").where({ cep }).first();
-            if (query === undefined) {
-                return false;
+            if (typeof key === 'string') {
+                const query = yield (0, connection_1.default)("collectionPoints").select("*").where({ cep: key }).first();
+                if (query === undefined) {
+                    return false;
+                }
+            }
+            if (typeof key === 'number') {
+                const query = yield (0, connection_1.default)("collectionPoints").select("*").where({ id: key }).first();
+                if (query === undefined) {
+                    return false;
+                }
             }
             return true;
         });
@@ -77,6 +85,22 @@ class CollectionPoint {
                         res.sendStatus(201);
                     }
                 }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
+    deleteCollectionPoint(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.body;
+                const exists = yield this.checkCollectionPointsExistence(Number(id));
+                if (!exists) {
+                    throw new Error("The Collection doesn't exists");
+                }
+                yield (0, connection_1.default)("categoryCollectionPoints").delete("*").where({ id });
+                res.sendStatus(200);
             }
             catch (error) {
                 res.status(400).send(error.message);
