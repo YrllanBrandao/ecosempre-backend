@@ -99,7 +99,7 @@ class CollectionPoint {
                 if (!exists) {
                     throw new Error("The Collection doesn't exists");
                 }
-                yield (0, connection_1.default)("categoryCollectionPoints").delete("*").where({ id });
+                yield (0, connection_1.default)("collectionPoints").delete("*").where({ id });
                 res.sendStatus(200);
             }
             catch (error) {

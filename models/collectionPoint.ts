@@ -122,7 +122,7 @@ class CollectionPoint{
         if(!exists){
             throw new Error("The Collection doesn't exists")
         }
-        await Connection("categoryCollectionPoints").delete("*").where({id});
+        await Connection("collectionPoints").delete("*").where({id});
             res.sendStatus(200);
         }
         catch(error:any){
