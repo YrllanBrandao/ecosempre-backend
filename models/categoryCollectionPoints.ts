@@ -4,6 +4,8 @@ import Connection from "../database/connection";
 import Static from "../static";
 
 
+
+
 interface ICategoriesCollectionPoints{
     name: string,
     createdAt?: string,
@@ -17,7 +19,16 @@ class CategoryCollectionPoints{
 
     private async verifyCategoryByname(name:string)
     {
-        const query:object | undefined =  await Connection("categoryCollectionPoints").select("*").where({name}).first();
+        const query:object | undefined =  await Connection("categoriesCollectionPoints").select("*").where({name}).first();
+
+        if(query === undefined)
+        {
+            return false;
+        }
+        return true;
+    }
+    private async checkExistenceById(id:number){
+        const query:object | undefined =  await Connection("categoriesCollectionPoints").select("*").where({id}).first();
 
         if(query === undefined)
         {
@@ -47,7 +58,7 @@ class CategoryCollectionPoints{
             res.sendStatus(409);
         }
         else{
-            await Connection("categoryCollectionPoints").insert(category);
+            await Connection("categoriesCollectionPoints").insert(category);
 
             res.sendStatus(201);
         }
@@ -59,7 +70,7 @@ class CategoryCollectionPoints{
     }
     public async getAll(req:Request, res:Response){
         try{
-            const categories: ICategoriesCollectionPoints[] = await Connection("categoryCollectionPoints").select("*");
+            const categories: ICategoriesCollectionPoints[] = await Connection("categoriesCollectionPoints").select("*");
             if(categories[0] === undefined){
                 res.sendStatus(404);
             }
@@ -69,6 +80,23 @@ class CategoryCollectionPoints{
             res.sendStatus(400);
         }
 
+    }
+    public async delete(req:Request, res:Response){
+        try{
+            const {id}:{id:string} = req.body;
+
+        const exists:boolean = await this.checkExistenceById(Number(id));
+
+        if(!exists){
+            res.sendStatus(404);
+        }
+
+        await Connection("categoriesCollectionPoints").delete("*").where({id});
+        res.sendStatus(200);
+        }
+        catch(error:any){
+            res.sendStatus(400);
+        }
     }
 }
 

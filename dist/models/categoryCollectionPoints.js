@@ -20,7 +20,16 @@ class CategoryCollectionPoints {
     }
     verifyCategoryByname(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const query = yield (0, connection_1.default)("categoryCollectionPoints").select("*").where({ name }).first();
+            const query = yield (0, connection_1.default)("categoriesCollectionPoints").select("*").where({ name }).first();
+            if (query === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
+    checkExistenceById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const query = yield (0, connection_1.default)("categoriesCollectionPoints").select("*").where({ id }).first();
             if (query === undefined) {
                 return false;
             }
@@ -40,7 +49,7 @@ class CategoryCollectionPoints {
                     res.sendStatus(409);
                 }
                 else {
-                    yield (0, connection_1.default)("categoryCollectionPoints").insert(category);
+                    yield (0, connection_1.default)("categoriesCollectionPoints").insert(category);
                     res.sendStatus(201);
                 }
             }
@@ -52,11 +61,27 @@ class CategoryCollectionPoints {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const categories = yield (0, connection_1.default)("categoryCollectionPoints").select("*");
+                const categories = yield (0, connection_1.default)("categoriesCollectionPoints").select("*");
                 if (categories[0] === undefined) {
                     res.sendStatus(404);
                 }
                 res.status(200).send(categories);
+            }
+            catch (error) {
+                res.sendStatus(400);
+            }
+        });
+    }
+    delete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.body;
+                const exists = yield this.checkExistenceById(Number(id));
+                if (!exists) {
+                    res.sendStatus(404);
+                }
+                yield (0, connection_1.default)("categoriesCollectionPoints").delete("*").where({ id });
+                res.sendStatus(200);
             }
             catch (error) {
                 res.sendStatus(400);
