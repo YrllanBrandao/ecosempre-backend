@@ -29,4 +29,8 @@ collectionPointRoutes.delete("/collection-point", middleware.handle, (req, res) 
     const collectionPoint = new collectionPoint_1.default();
     collectionPoint.deleteCollectionPoint(req, res);
 }));
+collectionPointRoutes.put("/collection-point", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const collectionPoint = new collectionPoint_1.default();
+    collectionPoint.updateCollectionPoint(req, res);
+}));
 exports.default = collectionPointRoutes;

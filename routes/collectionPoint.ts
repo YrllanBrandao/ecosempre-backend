@@ -23,5 +23,10 @@ collectionPointRoutes.delete("/collection-point", middleware.handle,  async(req:
 
     collectionPoint.deleteCollectionPoint(req, res);
 })
+collectionPointRoutes.put("/collection-point", middleware.handle,  async(req:Request,res:Response)=>{
+    const collectionPoint:CollectionPoint = new CollectionPoint();
+
+    collectionPoint.updateCollectionPoint(req, res);
+})
 
 export default collectionPointRoutes;
