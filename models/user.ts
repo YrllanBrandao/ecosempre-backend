@@ -54,12 +54,12 @@ class User {
     private getRoleAndId = async (email: string) => {
         const role = await Connection("roles")
             .join("users", "roles.user_id", "=", "users.id")
-            .select("roles.*")
+            .select("role")
             .where("users.email", email)
             .first();
         const user = await Connection("users").select("*").where({email}).first();
         return Object.freeze({
-            role: role,
+            role: role.role,
             userId: user.id
         });
     };

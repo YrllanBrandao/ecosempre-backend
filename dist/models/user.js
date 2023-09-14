@@ -24,12 +24,12 @@ class User {
         this.getRoleAndId = (email) => __awaiter(this, void 0, void 0, function* () {
             const role = yield (0, connection_1.default)("roles")
                 .join("users", "roles.user_id", "=", "users.id")
-                .select("roles.*")
+                .select("role")
                 .where("users.email", email)
                 .first();
             const user = yield (0, connection_1.default)("users").select("*").where({ email }).first();
             return Object.freeze({
-                role: role,
+                role: role.role,
                 userId: user.id
             });
         });

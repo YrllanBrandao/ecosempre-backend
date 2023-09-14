@@ -20,12 +20,7 @@ class Middleware {
             if (typeof decoded === 'object') {
                 const exp = decoded.exp;
                 const currentTime = Math.floor(Date.now() / 1000);
-                if (currentTime > exp) {
-                    res.sendStatus(498);
-                }
-                else {
-                    next();
-                }
+                console.log(decoded);
             }
         }
         catch (error) {
