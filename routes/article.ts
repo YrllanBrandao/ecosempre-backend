@@ -16,7 +16,7 @@ articleRoutes.get("/articles",  async (req: Request, res: Response) => {
 
 articleRoutes.post("/article", middleware.handle, async (req: Request, res: Response) => {
     const article: Article = new Article();
-    article.creatArticle(req, res);
+    article.createArticle(req, res);
 
 })
 

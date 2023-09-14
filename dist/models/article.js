@@ -53,7 +53,7 @@ class Article {
             }
             return true;
         };
-        this.creatArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.createArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const article = req.body;
                 const { tags_ids, categories } = req.body;

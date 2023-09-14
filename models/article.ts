@@ -169,7 +169,7 @@ class Article {
         }
         return true;
     }
-    public creatArticle = async (req: Request, res: Response) => {
+    public createArticle = async (req: Request, res: Response) => {
 
         try {
             const article: IArticle = req.body;
