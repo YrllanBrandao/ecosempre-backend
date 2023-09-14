@@ -51,14 +51,17 @@ class User {
         }
         return true;
     }
-    private getRole = async (email: string) => {
+    private getRoleAndId = async (email: string) => {
         const role = await Connection("roles")
             .join("users", "roles.user_id", "=", "users.id")
             .select("roles.*")
             .where("users.email", email)
             .first();
-
-        return role.role;
+        const user = await Connection("users").select("*").where({email}).first();
+        return Object.freeze({
+            role: role,
+            userId: user.id
+        });
     };
 
 
@@ -120,13 +123,14 @@ class User {
 
 
                 if (confirmed) {
-                    const userRole = await this.getRole(credentials.email);
+                    const roleAndId = await this.getRoleAndId(credentials.email);
                     const expiresIn = 60 * 60 * 24; // 24 horas em segundos
                     const currentTimestamp = Math.floor(Date.now() / 1000);
                     const expirationDate = currentTimestamp + expiresIn;
 
                     const payload: JwtPayload = {
-                        role: userRole,
+                        role: roleAndId.role,
+                        userId: roleAndId.userId,
                         exp: expirationDate,
                         iat: currentTimestamp,
                     };

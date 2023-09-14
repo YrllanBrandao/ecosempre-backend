@@ -21,13 +21,17 @@ dotenv_1.default.config();
 class User {
     constructor() {
         this.currentDate = new static_1.default().getCurrentDate();
-        this.getRole = (email) => __awaiter(this, void 0, void 0, function* () {
+        this.getRoleAndId = (email) => __awaiter(this, void 0, void 0, function* () {
             const role = yield (0, connection_1.default)("roles")
                 .join("users", "roles.user_id", "=", "users.id")
                 .select("roles.*")
                 .where("users.email", email)
                 .first();
-            return role.role;
+            const user = yield (0, connection_1.default)("users").select("*").where({ email }).first();
+            return Object.freeze({
+                role: role,
+                userId: user.id
+            });
         });
         this.confirmPassword = (credentails) => __awaiter(this, void 0, void 0, function* () {
             const user = yield (0, connection_1.default)("users").select("*").where({ email: credentails.email }).first();
@@ -66,12 +70,13 @@ class User {
                 if (exist) {
                     const confirmed = yield this.confirmPassword(credentials);
                     if (confirmed) {
-                        const userRole = yield this.getRole(credentials.email);
+                        const roleAndId = yield this.getRoleAndId(credentials.email);
                         const expiresIn = 60 * 60 * 24; // 24 horas em segundos
                         const currentTimestamp = Math.floor(Date.now() / 1000);
                         const expirationDate = currentTimestamp + expiresIn;
                         const payload = {
-                            role: userRole,
+                            role: roleAndId.role,
+                            userId: roleAndId.userId,
                             exp: expirationDate,
                             iat: currentTimestamp,
                         };
