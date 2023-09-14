@@ -23,10 +23,15 @@
     - [Obter tags](#obter-todas-as-tags)
     - [Deletar tag](#deletar-tag)
  - [Categoria de pontos de coleta](#categoria-de-pontos-de-coleta)
-    - [Criar categoria](#criar-categoria)
+    - [Criar categoria](#Criar-categoria-de-pontos-de-coleta)
+    - [Obter categorias de pontos de coleta](#Obter-categorias-de-pontos-de-coleta)
+    - [Deletar categoria de pontos de coleta](#Deletar-categoria-de-pontos-de-coleta)
+    - [Atualizar categoria de pontos de coleta](#Atualizar-categoria-de-pontos-de-coleta)
 -  [Pontos de coleta](#pontos-de-coleta)
     - [Criar ponto de coleta](#criar-ponto-de-coleta)
     - [Obter pontos de coleta](#obter-pontos-de-coleta)
+    - [Atualizar ponto de coleta](#Atualizar-ponto-de-coleta)
+    - [Deletar ponto de coleta](#Deletar-ponto-de-coleta)
 - [Agendamento de coleta](#agendamento-de-coleta)
 ## Visão geral das rotas
 
@@ -661,7 +666,7 @@ OK
 
 ## Categoria de pontos de coleta
 
-### Criar categoria
+### Criar categoria de pontos de coleta
 ⚠️ **autenticação exigida**
 ```
 POST {{baseUrl}}/category-collection-points
@@ -698,12 +703,131 @@ POST {{baseUrl}}/category-collection-points
   ```
 </details>
 
+### Obter categorias de pontos de coleta
 
+```
+GET {{baseUrl}}/categories-collection-points
+```
+
+##### Status
+| código | Descrição | 
+|-|-|
+| 201 | Sucesso |
+| 400 | Ocorreu um erro na requisição |
+| 404 | Nenhuma categoria encontrada |
+
+<details>
+  <summary>Exemplo de resposta</summary>
+  
+  ```
+[
+    {
+        "id": 3,
+        "name": "lixo-eletronico-2",
+        "createdAt": "2023-09-02T15:57:57.000Z",
+        "updatedAt": "2023-09-02T15:57:57.000Z"
+    },
+    {
+        "id": 4,
+        "name": "descarte-eletronico",
+        "createdAt": "2023-09-13T23:52:09.000Z",
+        "updatedAt": "2023-09-13T23:52:09.000Z"
+    }
+]
+  ```
+</details>
+
+<details>
+  <summary>Exemplo de resposta com erro</summary>
+  
+  ```
+
+  Conflict
+  
+  ```
+</details>
+
+### Deletar categoria de pontos de coleta
+
+⚠️ **autenticação exigida**
+
+```
+DELETE {{baseUrl}}/category-collection-points
+```
+
+##### Corpo da requisição
+
+| parâmetro | tipo | Descrição |
+|-|-|-|
+|id | number | id da categoria de ponto de coleta|
+
+##### Status
+| código | Descrição | 
+|-|-|
+| 200 | Sucesso |
+| 400 | Ocorreu um erro na requisição |
+| 404 | Nenhuma categoria encontrada |
+
+<details>
+  <summary>Exemplo de resposta</summary>
+  
+  ```
+ok
+  ```
+</details>
+
+<details>
+  <summary>Exemplo de resposta com erro</summary>
+  
+  ```
+Not Found
+  
+  ```
+</details>
+
+### Atualizar categoria de pontos de coleta
+
+⚠️ **autenticação exigida**
+
+```
+PUT {{baseUrl}}/category-collection-points
+```
+
+##### Corpo da requisição
+
+| parâmetro | tipo | Descrição |
+|-|-|-|
+|id | number | id da categoria de ponto de coleta|
+|name | string | novo nome para a categoria|
+##### Status
+| código | Descrição | 
+|-|-|
+| 200 | Sucesso |
+| 400 | Ocorreu um erro na requisição |
+| 404 | Nenhuma categoria encontrada |
+
+<details>
+  <summary>Exemplo de resposta</summary>
+  
+  ```
+ok
+  ```
+</details>
+
+<details>
+  <summary>Exemplo de resposta com erro</summary>
+  
+  ```
+Not Found
+  
+  ```
+</details>
 
 ## Pontos de coleta
 
 ### Criar ponto de coleta
 ⚠️ **autenticação exigida**
+
 ```
 POST {{baseUrl}}/collection-point
 ```
@@ -748,7 +872,7 @@ POST {{baseUrl}}/collection-point
 ### Obter pontos de coleta
 
 ```
-POST {{baseUrl}}/collection-points
+GET {{baseUrl}}/collection-points
 ```
 ##### Status
 | código | Descrição | 
@@ -774,6 +898,79 @@ POST {{baseUrl}}/collection-points
         "updatedAt": "2023-07-16T15:59:29.000Z"
     }
 ]
+  ```
+</details>
+
+<details>
+  <summary>Exemplo de resposta com erro</summary>
+  
+  ```
+  Bad Request
+  ```
+</details>
+
+### Deletar ponto de coleta
+⚠️ **autenticação exigida**
+```
+DELETE {{baseUrl}}/collection-point
+```
+| parâmetro | tipo | Descrição |
+|-|-|-|
+| id | number | id do ponto de coleta
+
+##### Status
+| código | Descrição | 
+|-|-|
+| 201 | Sucesso |
+| 400 | Ocorreu um erro na requisição |
+
+<details>
+  <summary>Exemplo de resposta bem sucedida</summary>
+  
+  ```
+  OK
+  ```
+</details>
+
+<details>
+  <summary>Exemplo de resposta com erro</summary>
+  
+  ```
+  Bad Request
+  ```
+</details>
+
+### Atualizar ponto de coleta
+
+⚠️ **autenticação exigida**
+
+```
+PUT {{baseUrl}}/collection-point
+```
+
+| parâmetro | tipo | Descrição |
+|-|-|-|
+| id | number | id do ponto de coleta
+| name | string | nome do ponto |
+| address | string | endereço completo do ponto de coleta |
+| cep | string | cep contendo apenas números |
+| category_id | number |id da categoria do ponto de coleta |
+| state | string | nome do estado |
+| size | string | tamanho do coletor ex: m, p e etc...|
+
+**Todos os parâmetros são opcionais com excessão do id**
+
+##### Status
+| código | Descrição | 
+|-|-|
+| 201 | Sucesso |
+| 400 | Ocorreu um erro na requisição |
+
+<details>
+  <summary>Exemplo de resposta bem sucedida</summary>
+  
+  ```
+  OK
   ```
 </details>
 
