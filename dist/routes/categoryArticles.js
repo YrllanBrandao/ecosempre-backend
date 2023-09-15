@@ -29,4 +29,8 @@ categoryArticlessRoutes.delete("/category-article", middleware.handle, (req, res
     const categoryArticles = new categoryArticles_1.default();
     categoryArticles.delete(req, res);
 }));
+categoryArticlessRoutes.put("/category-article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryArticles = new categoryArticles_1.default();
+    categoryArticles.update(req, res);
+}));
 exports.default = categoryArticlessRoutes;

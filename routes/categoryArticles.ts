@@ -22,4 +22,9 @@ categoryArticlessRoutes.delete("/category-article", middleware.handle, async(req
     const categoryArticles:CategoryArticles = new CategoryArticles();
     categoryArticles.delete(req, res);
 })
+
+categoryArticlessRoutes.put("/category-article", middleware.handle, async(req:Request, res:Response)=>{
+    const categoryArticles:CategoryArticles = new CategoryArticles();
+    categoryArticles.update(req, res);
+})
 export default categoryArticlessRoutes;
