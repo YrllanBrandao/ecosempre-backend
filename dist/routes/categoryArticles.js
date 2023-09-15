@@ -17,12 +17,16 @@ const categoryArticles_1 = __importDefault(require("../models/categoryArticles")
 const middleware_1 = __importDefault(require("../auth/middleware"));
 const categoryArticlessRoutes = express_1.default.Router();
 const middleware = new middleware_1.default();
+categoryArticlessRoutes.get("/category-article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryArticles = new categoryArticles_1.default();
+    categoryArticles.getCategories(req, res);
+}));
 categoryArticlessRoutes.post("/category-article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryArticles = new categoryArticles_1.default();
     categoryArticles.createCategory(req, res);
 }));
-categoryArticlessRoutes.get("/category-article", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+categoryArticlessRoutes.delete("/category-article", middleware.handle, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const categoryArticles = new categoryArticles_1.default();
-    categoryArticles.getCategories(req, res);
+    categoryArticles.delete(req, res);
 }));
 exports.default = categoryArticlessRoutes;
