@@ -15,7 +15,14 @@ class CategoryArticles{
     private  currentDate = new Static().getCurrentDate();
 
     private async verifyCategoryExistence(name:string){ 
-        const category : object | undefined = await Connection('categoryArticles').select("*").where({name}).first();
+        const category : object | undefined = await Connection('categoryArticles').select("*").where({name: slugify(name)}).first();
+        if(category === undefined){
+            return false;
+        }
+        return true;
+    }
+    private async verifyCategoryExistenceById(id:number){ 
+        const category : object | undefined = await Connection('categoryArticles').select("*").where({id}).first();
         if(category === undefined){
             return false;
         }
@@ -59,6 +66,26 @@ class CategoryArticles{
         }
         catch(error:any){
         res.sendStatus(500);
+        }
+    }
+    public async delete(req:Request, res:Response){
+        try{
+            const {id}:{id:string} = req.body;
+
+            const exists:boolean = await this.verifyCategoryExistenceById(Number(id));
+
+            if(!exists){
+                res.sendStatus(404);
+            }
+            else{
+                await Connection("categoryArticle").delete("*").where({article_id: Number(id)});
+            await Connection("categoryArticles").delete("*").where({id});
+            res.sendStatus(200);
+            }
+            
+        }
+        catch(error:any){
+            res.status(400).send(error.message);
         }
     }
 

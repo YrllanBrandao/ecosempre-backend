@@ -21,7 +21,16 @@ class CategoryArticles {
     }
     verifyCategoryExistence(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const category = yield (0, connection_1.default)('categoryArticles').select("*").where({ name }).first();
+            const category = yield (0, connection_1.default)('categoryArticles').select("*").where({ name: (0, slugify_1.default)(name) }).first();
+            if (category === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
+    verifyCategoryExistenceById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const category = yield (0, connection_1.default)('categoryArticles').select("*").where({ id }).first();
             if (category === undefined) {
                 return false;
             }
@@ -66,6 +75,25 @@ class CategoryArticles {
             }
             catch (error) {
                 res.sendStatus(500);
+            }
+        });
+    }
+    delete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.body;
+                const exists = yield this.verifyCategoryExistenceById(Number(id));
+                if (!exists) {
+                    res.sendStatus(404);
+                }
+                else {
+                    yield (0, connection_1.default)("categoryArticle").delete("*").where({ article_id: Number(id) });
+                    yield (0, connection_1.default)("categoryArticles").delete("*").where({ id });
+                    res.sendStatus(200);
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
             }
         });
     }
