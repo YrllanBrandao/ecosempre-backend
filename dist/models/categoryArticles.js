@@ -78,6 +78,24 @@ class CategoryArticles {
             }
         });
     }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const categoryOfArticle = req.body;
+                const exists = yield this.verifyCategoryExistenceById(Number(categoryOfArticle.id));
+                if (!exists) {
+                    res.sendStatus(404);
+                }
+                else {
+                    yield (0, connection_1.default)("categoryArticles").update(categoryOfArticle).where({ id: categoryOfArticle.id });
+                    res.sendStatus(200);
+                }
+            }
+            catch (error) {
+                res.status(400).send(error.message);
+            }
+        });
+    }
     delete(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

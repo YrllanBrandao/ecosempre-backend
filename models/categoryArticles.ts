@@ -6,10 +6,16 @@ import { IArticle } from './article';
 import slugify from 'slugify';
 
 interface ICategoryArticle{
+    id?: number;
     name: string;
     createdAt ?: string;
     updatedAt ?: string;
 }
+interface ICategoryArticleUpdate{
+    id: number;
+    name: string;
+}
+
 
 class CategoryArticles{
     private  currentDate = new Static().getCurrentDate();
@@ -68,6 +74,26 @@ class CategoryArticles{
         res.sendStatus(500);
         }
     }
+    public async update(req:Request, res:Response){
+        try{
+            const categoryOfArticle:ICategoryArticleUpdate = req.body;
+
+            const exists:boolean = await this.verifyCategoryExistenceById(Number(categoryOfArticle.id));
+
+            if(!exists){
+                res.sendStatus(404);
+            }
+            else{
+                await Connection("categoryArticles").update(categoryOfArticle).where({id:categoryOfArticle.id})
+            res.sendStatus(200);
+            }
+            
+        }
+        catch(error:any){
+            res.status(400).send(error.message);
+        }
+    }
+    
     public async delete(req:Request, res:Response){
         try{
             const {id}:{id:string} = req.body;
