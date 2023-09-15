@@ -39,8 +39,10 @@ class CategoryArticles {
                 };
                 const exist = yield this.verifyCategoryExistence(name);
                 if (!exist) {
-                    yield (0, connection_1.default)('categoryArticles').insert(category);
-                    res.sendStatus(201);
+                    const categoryArticleId = yield (0, connection_1.default)('categoryArticles').insert(category);
+                    res.status(201).json({
+                        id: categoryArticleId[0]
+                    });
                 }
                 else {
                     res.sendStatus(409);

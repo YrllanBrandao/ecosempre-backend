@@ -32,8 +32,10 @@ class CategoryArticles{
             const exist:boolean = await this.verifyCategoryExistence(name);
 
             if(!exist){
-                await Connection('categoryArticles').insert(category);
-                res.sendStatus(201);
+               const categoryArticleId: number[] = await Connection('categoryArticles').insert(category);
+                res.status(201).json({
+                    id: categoryArticleId[0]
+                });
             }else{
                 res.sendStatus(409);
             }
