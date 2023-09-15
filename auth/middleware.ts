@@ -21,8 +21,12 @@ export class Middleware {
       if (typeof decoded === 'object') {
         const exp: number = decoded.exp!;
         const currentTime = Math.floor(Date.now() / 1000);
-       
-        console.log(decoded)
+        if (currentTime > exp) {
+
+          res.sendStatus(498)
+        } else {
+          next();
+        }
       }
     }
     catch (error: any) {
