@@ -97,11 +97,12 @@ class Tag{
             tag.name = slugify(tag.name);
             const exist:boolean = await this.verifyTagById(id);
             const nameConflict:boolean = await this.verifyTagByName(tag.name);
-            if(nameConflict){
-                res.sendStatus(409);
-            }
-            if(exist)
+           
+           if(exist)
             {
+                if(nameConflict){
+                    res.sendStatus(409);
+                }
                 await Connection("tags").update(tag).where({id});
                 res.sendStatus(200);
             }else{

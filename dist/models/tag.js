@@ -94,10 +94,10 @@ class Tag {
                 tag.name = (0, slugify_1.default)(tag.name);
                 const exist = yield this.verifyTagById(id);
                 const nameConflict = yield this.verifyTagByName(tag.name);
-                if (nameConflict) {
-                    res.sendStatus(409);
-                }
                 if (exist) {
+                    if (nameConflict) {
+                        res.sendStatus(409);
+                    }
                     yield (0, connection_1.default)("tags").update(tag).where({ id });
                     res.sendStatus(200);
                 }
