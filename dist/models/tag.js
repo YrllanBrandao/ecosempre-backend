@@ -71,7 +71,8 @@ class Tag {
                 }
                 const exist = yield this.verifyTagById(idParsed);
                 if (exist) {
-                    yield (0, connection_1.default)("tags").delete("*").where({ idParsed });
+                    yield (0, connection_1.default)("articleTag").delete("*").where({ tag_id: idParsed });
+                    yield (0, connection_1.default)("tags").delete("*").where({ id: idParsed });
                     res.sendStatus(200);
                 }
                 else {
@@ -79,7 +80,7 @@ class Tag {
                 }
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.message);
             }
         });
     }

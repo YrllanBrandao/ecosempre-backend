@@ -74,7 +74,8 @@ class Tag{
 
             if(exist)
             {
-                await Connection("tags").delete("*").where({idParsed});
+                await Connection("articleTag").delete("*").where({tag_id:idParsed});
+                await Connection("tags").delete("*").where({id: idParsed});
                 res.sendStatus(200);
             }else{
                 res.sendStatus(404);
@@ -82,7 +83,7 @@ class Tag{
         }
         catch(error:any)
         {
-            res.sendStatus(400);
+            res.status(400).send(error.message);
         }
     }
     public async updateTag(req:Request, res:Response){
