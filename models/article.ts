@@ -284,13 +284,18 @@ class Article {
                 const offset = (Number(page) - 1) * Number(limit)
                 const articles = await Connection("articles")
                 .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
-                .orderBy("id", "desc")
-                .limit(Number(limit) * 4)
-                .offset(Number(offset))
-                .leftJoin("categoryArticle", "articles.id", "categoryArticle.article_id")
+                .from(function (this: any) { 
+                    this.from("articles")
+                    .orderBy("id", "desc")
+                    .limit(Number(limit))
+                    .offset(Number(offset))
+                    .as("articles")
+                })
+                .join("categoryArticle", "articles.id", "categoryArticle.article_id")
                 .leftJoin("categoryArticles", "categoryArticle.category_id", "categoryArticles.id")
                 .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                 .leftJoin("tags", "articleTag.tag_id", "tags.id");
+
                
 
                 if (articles[0] === undefined) {

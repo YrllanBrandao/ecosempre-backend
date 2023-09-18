@@ -76,13 +76,13 @@ class User {
                         const expirationDate = currentTimestamp + expiresIn;
                         const payload = {
                             role: roleAndId.role,
-                            userId: roleAndId.userId,
                             exp: expirationDate,
                             iat: currentTimestamp,
                         };
                         const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET);
                         return res.status(200).json({
                             token,
+                            userId: roleAndId.userId
                         });
                     }
                     else {

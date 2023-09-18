@@ -130,7 +130,6 @@ class User {
 
                     const payload: JwtPayload = {
                         role: roleAndId.role,
-                        userId: roleAndId.userId,
                         exp: expirationDate,
                         iat: currentTimestamp,
                     };
@@ -138,6 +137,7 @@ class User {
                     const token = jwt.sign(payload, process.env.JWT_SECRET!);
                     return res.status(200).json({
                         token,
+                        userId: roleAndId.userId
                     });
 
                 }
