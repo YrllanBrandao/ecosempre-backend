@@ -16,6 +16,10 @@ tagRoutes.delete("/tag", middleware.handle, async(req:Request, res:Response)=>{
     const tag:Tag = new Tag();
     tag.deleteTag(req, res);
 })
+tagRoutes.put("/tag", middleware.handle, async(req:Request, res:Response)=>{
+    const tag:Tag = new Tag();
+    tag.updateTag(req, res);
+})
 tagRoutes.get("/tags", async(req:Request, res:Response)=>{
     const tag:Tag = new Tag();
     tag.getTags(req, res);
