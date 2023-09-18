@@ -64,14 +64,41 @@ class Tag {
     deleteTag(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { tag_id } = req.body;
-                const id = Number(tag_id);
+                const { id } = req.body;
+                const idParsed = Number(id);
+                if (idParsed <= 0) {
+                    throw new Error("invalid id");
+                }
+                const exist = yield this.verifyTagById(idParsed);
+                if (exist) {
+                    yield (0, connection_1.default)("tags").delete("*").where({ idParsed });
+                    res.sendStatus(200);
+                }
+                else {
+                    res.sendStatus(404);
+                }
+            }
+            catch (error) {
+                res.sendStatus(400);
+            }
+        });
+    }
+    updateTag(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const tag = req.body;
+                const id = Number(tag.id);
                 if (id <= 0) {
                     throw new Error("invalid id");
                 }
+                tag.name = (0, slugify_1.default)(tag.name);
                 const exist = yield this.verifyTagById(id);
+                const nameConflict = yield this.verifyTagByName(tag.name);
+                if (nameConflict) {
+                    res.sendStatus(409);
+                }
                 if (exist) {
-                    yield (0, connection_1.default)("tags").delete("*").where({ id });
+                    yield (0, connection_1.default)("tags").update(tag).where({ id });
                     res.sendStatus(200);
                 }
                 else {

@@ -5,6 +5,7 @@ import Static from '../static';
 
 
 interface ITag{
+    id?:number
     name: string;
     createdAt?: string,
     updatedAt?: string
@@ -63,17 +64,45 @@ class Tag{
 
     public async deleteTag(req:Request, res:Response){
         try{
-            const {tag_id}:{tag_id:string} = req.body;
-            const id:number = Number(tag_id)
+            const {id}:{id:string} = req.body;
+            const idParsed:number = Number(id)
+            if(idParsed <= 0)
+            {
+                throw new Error("invalid id");
+            }
+            const exist:boolean = await this.verifyTagById(idParsed);
+
+            if(exist)
+            {
+                await Connection("tags").delete("*").where({idParsed});
+                res.sendStatus(200);
+            }else{
+                res.sendStatus(404);
+            }
+        }
+        catch(error:any)
+        {
+            res.sendStatus(400);
+        }
+    }
+    public async updateTag(req:Request, res:Response){
+        try{
+       
+            const tag:ITag = req.body
+            const id:number = Number(tag.id);
             if(id <= 0)
             {
                 throw new Error("invalid id");
             }
+            tag.name = slugify(tag.name);
             const exist:boolean = await this.verifyTagById(id);
-
+            const nameConflict:boolean = await this.verifyTagByName(tag.name);
+            if(nameConflict){
+                res.sendStatus(409);
+            }
             if(exist)
             {
-                await Connection("tags").delete("*").where({id});
+                await Connection("tags").update(tag).where({id});
                 res.sendStatus(200);
             }else{
                 res.sendStatus(404);
