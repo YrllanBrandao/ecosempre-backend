@@ -105,7 +105,7 @@ class CategoryArticles{
             }
             else{
                 await Connection("categoryArticle").delete("*").where({article_id: Number(id)});
-            await Connection("categoryArticles").delete("*").where({id});
+            await Connection("categoryArticles").delete("*").where({id: Number(id)});
             res.sendStatus(200);
             }
             
