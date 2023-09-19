@@ -29,7 +29,7 @@ class Middleware {
             }
         }
         catch (error) {
-            res.sendStatus(400);
+            res.status(403).send("forbidden");
         }
     }
 }

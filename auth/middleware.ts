@@ -30,7 +30,7 @@ export class Middleware {
       }
     }
     catch (error: any) {
-      res.sendStatus(400)
+      res.status(403).send("forbidden");
     }
   }
 }
