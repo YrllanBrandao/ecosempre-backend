@@ -102,10 +102,12 @@ class Tag{
            if(exist)
             {
                 if(nameConflict){
-                    res.sendStatus(409);
+                    res.status(409).send(`The tag "${tag.name} already exists`);
                 }
+               else{
                 await Connection("tags").update(tag).where({id});
                 res.sendStatus(200);
+               }
             }else{
                 res.sendStatus(404);
             }

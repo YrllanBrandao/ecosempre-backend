@@ -97,10 +97,12 @@ class Tag {
                 const nameConflict = yield this.verifyTagByName(tag.name);
                 if (exist) {
                     if (nameConflict) {
-                        res.sendStatus(409);
+                        res.status(409).send(`The tag "${tag.name} already exists`);
                     }
-                    yield (0, connection_1.default)("tags").update(tag).where({ id });
-                    res.sendStatus(200);
+                    else {
+                        yield (0, connection_1.default)("tags").update(tag).where({ id });
+                        res.sendStatus(200);
+                    }
                 }
                 else {
                     res.sendStatus(404);
