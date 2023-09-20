@@ -46,7 +46,7 @@ class CollectionPoint{
     }
     private async checkCategorysExistence(category_id:number)
     {
-        const query:object | undefined = await Connection("categoryCollectionPoints").select("*").where({id:category_id}).first();
+        const query:object | undefined = await Connection("categoriesCollectionPoints").select("*").where({id:category_id}).first();
 
         if(query === undefined)
         {

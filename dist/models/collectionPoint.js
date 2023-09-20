@@ -37,7 +37,7 @@ class CollectionPoint {
     }
     checkCategorysExistence(category_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const query = yield (0, connection_1.default)("categoryCollectionPoints").select("*").where({ id: category_id }).first();
+            const query = yield (0, connection_1.default)("categoriesCollectionPoints").select("*").where({ id: category_id }).first();
             if (query === undefined) {
                 return false;
             }
