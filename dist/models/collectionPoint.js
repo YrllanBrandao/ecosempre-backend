@@ -73,8 +73,8 @@ class CollectionPoint {
                     if (collectionPoint.category_id) {
                         const categoryExist = yield this.checkCategorysExistence(Number(collectionPoint.category_id));
                         if (categoryExist) {
-                            yield (0, connection_1.default)("collectionPoints").insert(collectionPoint);
-                            res.sendStatus(201);
+                            const collectionPointId = yield (0, connection_1.default)("collectionPoints").insert(collectionPoint);
+                            res.status(201).send(collectionPointId);
                         }
                         else {
                             throw new Error("the category doesn't exist");

@@ -92,9 +92,9 @@ class CollectionPoint{
 
             if(categoryExist)
             {
-                await Connection("collectionPoints").insert(collectionPoint);
+                const collectionPointId:number = await Connection("collectionPoints").insert(collectionPoint);
 
-                res.sendStatus(201);
+                res.status(201).send(collectionPointId);
             }
             else{
                 throw new Error("the category doesn't exist");
