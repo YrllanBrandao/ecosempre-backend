@@ -79,7 +79,7 @@ class Article {
                         const articleId = Number(yield (0, connection_1.default)("articles").insert(fullArticle));
                         yield this.registerArticleTags(tags_ids, articleId);
                         yield this.registerCategoryArticle(categories, articleId);
-                        yield mailer.sendBatchEmails({
+                        mailer.sendBatchEmails({
                             slug: (0, slugify_1.default)(article.title),
                             title: article.title
                         });
