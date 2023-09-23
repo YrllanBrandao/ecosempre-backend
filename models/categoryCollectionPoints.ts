@@ -59,9 +59,9 @@ class CategoryCollectionPoints{
             res.sendStatus(409);
         }
         else{
-            await Connection("categoriesCollectionPoints").insert(category);
+            const categoryId:number = await Connection("categoriesCollectionPoints").insert(category);
 
-            res.sendStatus(201);
+            res.status(201).send(categoryId);
         }
         }
         catch(error:any)

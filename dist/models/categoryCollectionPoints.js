@@ -49,8 +49,8 @@ class CategoryCollectionPoints {
                     res.sendStatus(409);
                 }
                 else {
-                    yield (0, connection_1.default)("categoriesCollectionPoints").insert(category);
-                    res.sendStatus(201);
+                    const categoryId = yield (0, connection_1.default)("categoriesCollectionPoints").insert(category);
+                    res.status(201).send(categoryId);
                 }
             }
             catch (error) {
