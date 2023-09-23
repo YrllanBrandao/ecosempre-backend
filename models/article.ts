@@ -201,15 +201,16 @@ class Article {
                    const articleId:number =  Number(await Connection("articles").insert(fullArticle));
                    await this.registerArticleTags(tags_ids, articleId);
                    await this.registerCategoryArticle(categories, articleId);
-                     mailer.sendBatchEmails({
-                        slug: slugify(article.title),
-                        title: article.title
-                    })
+                    
                     
 
 
                     res.status(201).send("Created Successfully!");
                     
+                    await  mailer.sendBatchEmails({
+                        slug: slugify(article.title),
+                        title: article.title
+                    })
                 }
             }
             else {
