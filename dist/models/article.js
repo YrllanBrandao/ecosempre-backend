@@ -91,7 +91,7 @@ class Article {
                 }
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.message);
             }
         });
         this.deleteArticle = (req, res) => __awaiter(this, void 0, void 0, function* () {

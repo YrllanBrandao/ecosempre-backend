@@ -218,7 +218,7 @@ class Article {
 
         }
         catch (error: any) {
-            res.sendStatus(400);
+            res.status(400).send(error.message);
         }
     }
 
