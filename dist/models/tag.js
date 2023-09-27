@@ -38,6 +38,15 @@ class Tag {
             return true;
         });
     }
+    hasRelashionship(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const relashionship = yield (0, connection_1.default)("articleTag").select("*").where({ tag_id: id }).first();
+            if (relashionship === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
     createTag(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -70,6 +79,11 @@ class Tag {
                     throw new Error("invalid id");
                 }
                 const exist = yield this.verifyTagById(idParsed);
+                const hasRelashionship = yield this.hasRelashionship(idParsed);
+                if (hasRelashionship) {
+                    res.status(422).send("Unable to delete this tag, it belongs to an existing article");
+                    return;
+                }
                 if (exist) {
                     yield (0, connection_1.default)("articleTag").delete("*").where({ tag_id: idParsed });
                     yield (0, connection_1.default)("tags").delete("*").where({ id: idParsed });

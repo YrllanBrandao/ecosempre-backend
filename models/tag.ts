@@ -35,6 +35,15 @@ class Tag{
         }
         return true;
     }
+   private  async  hasRelashionship(id: number){
+        const relashionship:object | undefined = await Connection("articleTag").select("*").where({tag_id:id}).first();
+
+        if(relashionship === undefined )
+        {
+            return false;
+        }
+        return true;
+    }
    public async createTag (req:Request, res:Response){
     try{
         const {name}:{name:string} = req.body;
@@ -71,7 +80,13 @@ class Tag{
                 throw new Error("invalid id");
             }
             const exist:boolean = await this.verifyTagById(idParsed);
+            const hasRelashionship:boolean = await this.hasRelashionship(idParsed);
 
+            if(hasRelashionship){
+                res.status(422).send("Unable to delete this tag, it belongs to an existing article");
+                return;
+            }
+             
             if(exist)
             {
                 await Connection("articleTag").delete("*").where({tag_id:idParsed});
