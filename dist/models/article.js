@@ -124,7 +124,7 @@ class Article {
                             categories: []
                         };
                         const article = yield (0, connection_1.default)("articles")
-                            .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
+                            .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name", "tags.id as tag_id", "categoryArticles.id as category_id")
                             .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                             .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                             .leftJoin("tags", "articleTag.tag_id", "tags.id")
@@ -144,12 +144,20 @@ class Article {
                             }
                             if (row.tag_name) {
                                 if (!articleWithTags.tags.includes(row.tag_name)) {
-                                    articleWithTags.tags.push(row.tag_name);
+                                    const fullTag = {
+                                        id: row.tag_id,
+                                        name: row.tag_name
+                                    };
+                                    articleWithTags.tags.push(fullTag);
                                 }
                             }
                             if (row.category_name) {
                                 if (!articleWithTags.categories.includes(row.category_name)) {
-                                    articleWithTags.categories.push(row.category_name);
+                                    const fullCategory = {
+                                        id: row.category_id,
+                                        name: row.category_name
+                                    };
+                                    articleWithTags.categories.push(fullCategory);
                                 }
                             }
                         });
