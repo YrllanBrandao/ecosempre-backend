@@ -34,6 +34,15 @@ class CategoryArticles{
         }
         return true;
     }
+    private  async  hasRelashionship(id: number){
+        const relashionship:object | undefined = await Connection("categoryArticle").select("*").where({category_id:id}).first();
+
+        if(relashionship === undefined )
+        {
+            return false;
+        }
+        return true;
+    }
     public async createCategory(req: Request, res:Response){
         try{
             const {name}:{name:string}= req.body;
@@ -99,7 +108,12 @@ class CategoryArticles{
             const {id}:{id:string} = req.body;
 
             const exists:boolean = await this.verifyCategoryExistenceById(Number(id));
+            const hasRelashionship: boolean = await this.hasRelashionship(Number(id));
 
+            if(hasRelashionship){
+                res.status(422).send("Unable to delete this category, it belongs to an existing article");
+                return;
+            }
             if(!exists){
                 res.sendStatus(404);
             }

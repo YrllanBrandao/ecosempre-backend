@@ -37,6 +37,15 @@ class CategoryArticles {
             return true;
         });
     }
+    hasRelashionship(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const relashionship = yield (0, connection_1.default)("categoryArticle").select("*").where({ category_id: id }).first();
+            if (relashionship === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
     createCategory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -101,6 +110,11 @@ class CategoryArticles {
             try {
                 const { id } = req.body;
                 const exists = yield this.verifyCategoryExistenceById(Number(id));
+                const hasRelashionship = yield this.hasRelashionship(Number(id));
+                if (hasRelashionship) {
+                    res.status(422).send("Unable to delete this category, it belongs to an existing article");
+                    return;
+                }
                 if (!exists) {
                     res.sendStatus(404);
                 }
