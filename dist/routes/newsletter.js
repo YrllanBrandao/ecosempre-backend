@@ -31,6 +31,6 @@ newsletterRoutes.get("/newsletter", middleware.handle, (req, res) => __awaiter(v
 }));
 newsletterRoutes.get("/unsubscribe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newsletter = new newsletter_1.default();
-    newsletter.deleteEmail(req, res);
+    newsletter.deleteEmailFromNewsletter(req, res);
 }));
 exports.default = newsletterRoutes;

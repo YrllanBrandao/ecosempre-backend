@@ -95,7 +95,41 @@ class Newsletter {
     public async deleteEmail(req:Request, res:Response)
     {
         try{
-            const {token}:{token:string} = req.body;
+            const {email}:{email:string} = req.body;
+     
+                const isValid:boolean = this.validateEmail(email);
+
+                const exist:boolean = await this.verifyEmail(email);
+                if(isValid)
+                {
+                    if(exist)
+                    {
+                        await Connection("newsletter").delete("*").where({email});
+                        res.sendStatus(200);
+                    }
+                    else{
+                        res.sendStatus(404);
+                    }
+                }
+                else{
+                    throw new Error("invalid E-mail");
+                }
+            }
+            catch(error:any)
+            {
+                res.sendStatus(400);
+            }
+    
+        }
+        
+    public async deleteEmailFromNewsletter(req:Request, res:Response)
+    {
+        try{
+            const {token}:{token?:string} = req.query;
+
+            if(token === undefined || token === null){
+                throw  new Error("Invalid token");
+            }
             
             const decodedToken: IDecodedToken | null = this.descryptJwtToken(token);
 
@@ -125,7 +159,7 @@ class Newsletter {
         }
         catch(error:any)
         {
-            res.sendStatus(400);
+            res.status(400).send(error.message);
         }
     }
 

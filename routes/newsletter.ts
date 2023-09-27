@@ -23,7 +23,7 @@ newsletterRoutes.get("/newsletter", middleware.handle,  async(req:Request, res:R
 
 newsletterRoutes.get("/unsubscribe", async (req:Request, res:Response)=>{
     const newsletter:Newsletter = new Newsletter();
-    newsletter.deleteEmail(req, res);
+    newsletter.deleteEmailFromNewsletter(req, res);
 })
 
 export default newsletterRoutes;

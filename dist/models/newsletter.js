@@ -93,7 +93,34 @@ class Newsletter {
     deleteEmail(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { token } = req.body;
+                const { email } = req.body;
+                const isValid = this.validateEmail(email);
+                const exist = yield this.verifyEmail(email);
+                if (isValid) {
+                    if (exist) {
+                        yield (0, connection_1.default)("newsletter").delete("*").where({ email });
+                        res.sendStatus(200);
+                    }
+                    else {
+                        res.sendStatus(404);
+                    }
+                }
+                else {
+                    throw new Error("invalid E-mail");
+                }
+            }
+            catch (error) {
+                res.sendStatus(400);
+            }
+        });
+    }
+    deleteEmailFromNewsletter(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { token } = req.query;
+                if (token === undefined || token === null) {
+                    throw new Error("Invalid token");
+                }
                 const decodedToken = this.descryptJwtToken(token);
                 if (decodedToken) {
                     const isValid = this.validateEmail(decodedToken.email);
@@ -116,7 +143,7 @@ class Newsletter {
                 }
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.message);
             }
         });
     }
