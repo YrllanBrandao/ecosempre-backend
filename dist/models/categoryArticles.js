@@ -119,7 +119,7 @@ class CategoryArticles {
                     res.sendStatus(404);
                 }
                 else {
-                    yield (0, connection_1.default)("categoryArticle").delete("*").where({ article_id: Number(id) });
+                    yield (0, connection_1.default)("categoryArticle").delete("*").where({ category_id: Number(id) });
                     yield (0, connection_1.default)("categoryArticles").delete("*").where({ id: Number(id) });
                     res.sendStatus(200);
                 }
