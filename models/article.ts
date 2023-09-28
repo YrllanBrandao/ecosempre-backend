@@ -40,8 +40,8 @@ interface IArticleWithTags{
     slug?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    tags: object[];
-    categories: object[];
+    tags: string[];
+    categories: string[];
                       
 }
 interface IArticleWithCategory {
@@ -323,7 +323,7 @@ class Article {
                     }
                     
 
-                    if(row.categories_names && row.tags_names && !newArticle.categories.includes(row.categories_names))
+                    if(row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names))
                     {
                             
                            
@@ -383,7 +383,7 @@ class Article {
                     }
                     
 
-                    if(row.categories_names && row.tags_names && !newArticle.categories.includes(row.categories_names))
+                    if(row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names))
                     {
                             
                            
@@ -402,6 +402,8 @@ class Article {
                                         if(!savedArticle['tags'].includes(row.tags_names)){
                                             savedArticle['tags'].push(row.tags_names);
                                         }
+                                       
+                                       
                                     }
                                 })
                             }
@@ -434,8 +436,7 @@ class Article {
                       };
                       
                       const article = await Connection("articles")
-                        .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name",
-                        "tags.id as tag_id", "categoryArticles.id as category_id")
+                        .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
                         .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                         .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                         .leftJoin("tags", "articleTag.tag_id", "tags.id")
@@ -455,26 +456,20 @@ class Article {
                           articleWithTags.createdAt = row.createdAt;
                           articleWithTags.updatedAt = row.updatedAt;
                         }
+
+                        
                         
                         if (row.tag_name) {
                     
                           if(!articleWithTags.tags.includes(row.tag_name))
                                 {
-                                    const fullTag:object = {
-                                        id: row.tag_id,
-                                        name: row.tag_name
-                                    }
-                                    articleWithTags.tags.push(fullTag);
+                                    articleWithTags.tags.push(row.tag_name)
                                 }
                         }
                         if(row.category_name){
                             if(!articleWithTags.categories.includes(row.category_name))
                                 {
-                                    const fullCategory:object = {
-                                        id: row.category_id,
-                                        name: row.category_name
-                                    }
-                                    articleWithTags.categories.push(fullCategory);
+                                    articleWithTags.categories.push(row.category_name)
                                 }
                         }
                       });
