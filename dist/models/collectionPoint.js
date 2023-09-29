@@ -47,16 +47,43 @@ class CollectionPoint {
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const collectionPoints = yield (0, connection_1.default)("collectionPoints").select("*");
+                const collectionPoints = yield (0, connection_1.default)("collectionPoints")
+                    .select("collectionPoints.*", "categoriesCollectionPoints.name as category_name")
+                    .innerJoin("categoriesCollectionPoints", "categoriesCollectionPoints.id", "collectionPoints.category_id");
+                const collectionPointList = [];
+                const collectionPointsObtaineds = new Set;
                 if (collectionPoints[0] === undefined) {
                     res.sendStatus(404);
                 }
                 else {
-                    res.status(200).send(collectionPoints);
+                    collectionPoints.forEach(collectionPoint => {
+                        const fullCollectionPoint = {
+                            id: collectionPoint.id,
+                            name: collectionPoint.name,
+                            address: collectionPoint.address,
+                            cep: collectionPoint.cep,
+                            city: collectionPoint.city,
+                            state: collectionPoint.state,
+                            size: collectionPoint.size,
+                            category: {},
+                            createdAt: collectionPoint.createdAt,
+                            updatedAt: collectionPoint.updatedAt
+                        };
+                        if (!collectionPointsObtaineds.has(Number(collectionPoint.id))) {
+                            const category = {
+                                id: collectionPoint.category_id,
+                                name: collectionPoint.category_name
+                            };
+                            fullCollectionPoint.category = category;
+                            collectionPointsObtaineds.add(collectionPoint.id);
+                            collectionPointList.push(fullCollectionPoint);
+                        }
+                    });
+                    res.status(200).send(collectionPointList);
                 }
             }
             catch (error) {
-                res.sendStatus(400);
+                res.status(400).send(error.message);
             }
         });
     }

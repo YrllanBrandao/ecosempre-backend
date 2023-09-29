@@ -9,7 +9,7 @@ interface ICollectionPoint{
     name: string,
     address: string,
     cep: string;
-    category_id?: number,
+    category_id?: number | object,
     state: string;
     city: string;
     size: string;
@@ -17,12 +17,28 @@ interface ICollectionPoint{
     updatedAt?:string;
 }
 
+interface ICollectionPointObtained{
+    id?: string
+    name: string,
+    address: string,
+    cep: string;
+    state: string;
+    city: string;
+    size: string;
+    category: object;
+    createdAt?:string;
+    updatedAt?:string;
+}
+
+type category = {
+    id: number;
+    name: string;
+}
 
 
 class CollectionPoint{
     constructor(){}
     private currentDate:string = new Static().getCurrentDate();
-
     private async checkCollectionPointsExistence(key:string|number)
     {
         if(typeof key === 'string'){
@@ -56,19 +72,49 @@ class CollectionPoint{
     }
     public async getAll(req:Request, res:Response){
         try{
-            const collectionPoints:string[] = await Connection("collectionPoints").select("*");
+            const collectionPoints = await Connection("collectionPoints")
+            .select("collectionPoints.*", "categoriesCollectionPoints.name as category_name")
+            .innerJoin("categoriesCollectionPoints", "categoriesCollectionPoints.id", "collectionPoints.category_id");
 
+
+            const collectionPointList:ICollectionPointObtained[] = [];
+            const collectionPointsObtaineds: Set<number> = new Set;
         if(collectionPoints[0] === undefined)
         {
             res.sendStatus(404);
         }
         else{
-            res.status(200).send(collectionPoints);
+            
+            collectionPoints.forEach(collectionPoint =>{
+                const fullCollectionPoint:ICollectionPointObtained = {
+                    id: collectionPoint.id,
+                    name: collectionPoint.name,
+                    address: collectionPoint.address,
+                    cep: collectionPoint.cep,
+                    city: collectionPoint.city,
+                    state: collectionPoint.state,
+                    size: collectionPoint.size,
+                    category: {},
+                    createdAt: collectionPoint.createdAt,
+                    updatedAt: collectionPoint.updatedAt
+                }
+                if(!collectionPointsObtaineds.has(Number(collectionPoint.id)))
+                {
+                   const category: category = {
+                    id: collectionPoint.category_id,
+                    name: collectionPoint.category_name
+                   }
+                   fullCollectionPoint.category = category;
+                   collectionPointsObtaineds.add(collectionPoint.id);
+                   collectionPointList.push(fullCollectionPoint);
+                }
+            })
+            res.status(200).send(collectionPointList);
         }
         }
         catch(error:any)
         {
-            res.sendStatus(400);
+            res.status(400).send(error.message);
         }
     }
     public async createCollectionPoint(req:Request,res:Response){
@@ -119,9 +165,9 @@ class CollectionPoint{
             const {id}:{id:number} = req.body;
 
         const exists:boolean = await this.checkCollectionPointsExistence(Number(id));
-
+     
         if(!exists){
-            throw new Error("The Collection doesn't exists")
+            throw new Error("The Collection doesn't exists");
         }
         await Connection("collectionPoints").delete("*").where({id});
             res.sendStatus(200);
