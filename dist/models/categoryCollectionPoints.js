@@ -36,6 +36,15 @@ class CategoryCollectionPoints {
             return true;
         });
     }
+    hasRelashionship(category_id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const category = (0, connection_1.default)("collectionPoints").select("*").where({ category_id }).first();
+            if (category === undefined) {
+                return false;
+            }
+            return true;
+        });
+    }
     createCategory(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -77,11 +86,15 @@ class CategoryCollectionPoints {
             try {
                 const { id } = req.body;
                 const exists = yield this.checkExistenceById(Number(id));
+                const hasRelashionship = yield this.hasRelashionship(Number(id));
+                if (hasRelashionship) {
+                    res.status(422).send("Unable to delete this Category of collection point, it belongs to an existing article");
+                    return;
+                }
                 if (!exists) {
                     res.sendStatus(404);
                 }
                 else {
-                    yield (0, connection_1.default)("collectionPoints").update({ category_id: null }).where({ category_id: id });
                     yield (0, connection_1.default)("categoriesCollectionPoints").delete("*").where({ id });
                     res.sendStatus(200);
                 }

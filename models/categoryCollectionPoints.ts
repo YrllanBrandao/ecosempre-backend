@@ -37,6 +37,14 @@ class CategoryCollectionPoints{
         }
         return true;
     }
+    private async hasRelashionship(category_id:number){
+        const category:object | undefined = Connection("collectionPoints").select("*").where({category_id}).first();
+        if(category === undefined)
+        {
+            return false;
+        }
+        return true;
+    }
     public async createCategory(req:Request, res:Response)
     {
         try{
@@ -87,12 +95,17 @@ class CategoryCollectionPoints{
             const {id}:{id:string} = req.body;
 
         const exists:boolean = await this.checkExistenceById(Number(id));
+        const hasRelashionship:boolean = await this.hasRelashionship(Number(id));
 
+        if(hasRelashionship){
+            res.status(422).send("Unable to delete this Category of collection point, it belongs to an existing article");
+            return;
+        }
         if(!exists){
             res.sendStatus(404);
         }
         else{
-            await Connection("collectionPoints").update({category_id: null}).where({category_id: id})
+            
             await Connection("categoriesCollectionPoints").delete("*").where({id});
             
             res.sendStatus(200);
