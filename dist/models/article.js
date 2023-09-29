@@ -115,6 +115,8 @@ class Article {
                 const regex = /^\d+$/g;
                 const key = req.params.key;
                 const result = key.match(regex);
+                const tagsAdded = [];
+                const categoriesAdded = [];
                 //is string/slug
                 if (result === null) {
                     const exists = yield this.verifyArticleBySlug(key);
@@ -124,7 +126,7 @@ class Article {
                             categories: []
                         };
                         const article = yield (0, connection_1.default)("articles")
-                            .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
+                            .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name", "categoryArticles.id as category_id", "tags.id as tag_id")
                             .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                             .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                             .leftJoin("tags", "articleTag.tag_id", "tags.id")
@@ -143,13 +145,24 @@ class Article {
                                 articleWithTags.updatedAt = row.updatedAt;
                             }
                             if (row.tag_name) {
-                                if (!articleWithTags.tags.includes(row.tag_name)) {
-                                    articleWithTags.tags.push(row.tag_name);
+                                if (!tagsAdded.some(tag => tag.id === row.tag_id)) {
+                                    console.log("não existe");
+                                    const objectTag = {
+                                        id: row.tag_id,
+                                        name: row.tag_name
+                                    };
+                                    articleWithTags.tags.push(objectTag);
+                                    tagsAdded.push(objectTag);
                                 }
                             }
                             if (row.category_name) {
                                 if (!articleWithTags.categories.includes(row.category_name)) {
-                                    articleWithTags.categories.push(row.category_name);
+                                    const objectCategory = {
+                                        id: row.category_id,
+                                        name: row.category_name
+                                    };
+                                    articleWithTags.categories.push(objectCategory);
+                                    categoriesAdded.push(objectCategory);
                                 }
                             }
                         });

@@ -40,8 +40,8 @@ interface IArticleWithTags{
     slug?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    tags: string[];
-    categories: string[];
+    tags: object[];
+    categories: object[];
                       
 }
 interface IArticleWithCategory {
@@ -55,6 +55,12 @@ interface IArticleWithCategory {
     updatedAt?: Date;
     categories: string[];
 }
+
+type categoriesOrTags = {
+    id: string;
+    name: string;
+}
+
 class Article {
     private currentDate: string = new Static().getCurrentDate();
 
@@ -424,7 +430,8 @@ class Article {
             const regex: RegExp = /^\d+$/g;
             const key: string = req.params.key;
             const result: RegExpMatchArray | null = key.match(regex);
-
+            const tagsAdded:categoriesOrTags[] = [];
+            const categoriesAdded:categoriesOrTags[] = [];
             //is string/slug
             if (result === null) {
                 const exists: boolean = await this.verifyArticleBySlug(key);
@@ -436,7 +443,8 @@ class Article {
                       };
                       
                       const article = await Connection("articles")
-                        .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name")
+                        .select("articles.*", "tags.name as tag_name", "categoryArticles.name as category_name",
+                        "categoryArticles.id as category_id", "tags.id as tag_id")
                         .whereRaw('LOWER(slug) = ?', key.toLowerCase())
                         .leftJoin("articleTag", "articles.id", "articleTag.article_id")
                         .leftJoin("tags", "articleTag.tag_id", "tags.id")
@@ -461,15 +469,26 @@ class Article {
                         
                         if (row.tag_name) {
                     
-                          if(!articleWithTags.tags.includes(row.tag_name))
+                          if(!tagsAdded.some(tag => tag.id === row.tag_id))
                                 {
-                                    articleWithTags.tags.push(row.tag_name)
+                                    console.log("não existe")
+                                    const objectTag:categoriesOrTags = {
+                                        id: row.tag_id,
+                                        name: row.tag_name
+                                    }
+                                    articleWithTags.tags.push(objectTag);
+                                    tagsAdded.push(objectTag);
                                 }
                         }
                         if(row.category_name){
                             if(!articleWithTags.categories.includes(row.category_name))
                                 {
-                                    articleWithTags.categories.push(row.category_name)
+                                    const objectCategory:categoriesOrTags = {
+                                        id: row.category_id,
+                                        name: row.category_name
+                                    }
+                                    articleWithTags.categories.push(objectCategory);
+                                    categoriesAdded.push(objectCategory);
                                 }
                         }
                       });
