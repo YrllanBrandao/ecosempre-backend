@@ -321,19 +321,27 @@ class Article {
                             createdAt: row.createdAt,
                             updatedAt: row.updatedAt
                         };
-                        if (row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names)) {
-                            if (!savedArticles.includes(row.id)) {
-                                savedArticles.push(row.id);
-                                fullArticles.push(newArticle);
-                            }
-                            else {
-                                fullArticles.forEach(savedArticle => {
-                                    if (savedArticle.id === row.id) {
-                                        if (!savedArticle['categories'].includes(row.categories_names)) {
-                                            savedArticle['categories'].push(row.categories_names);
+                        if (!savedArticles.includes(row.id)) {
+                            savedArticles.push(row.id);
+                            newArticle.categories.push(row.categories_names);
+                            newArticle.tags.push(row.tags_names);
+                            fullArticles.push(newArticle);
+                        }
+                        else {
+                            if (row.categories_names) {
+                                fullArticles.forEach(oldArticle => {
+                                    if (oldArticle.id === row.id) {
+                                        if (!oldArticle.categories.includes(row.categories_names)) {
+                                            oldArticle.categories.push(row.categories_names);
                                         }
-                                        if (!savedArticle['tags'].includes(row.tags_names)) {
-                                            savedArticle['tags'].push(row.tags_names);
+                                    }
+                                });
+                            }
+                            if (row.tags_names) {
+                                fullArticles.forEach(oldArticle => {
+                                    if (oldArticle.id === row.id) {
+                                        if (!oldArticle.tags.includes(row.tags_names)) {
+                                            oldArticle.tags.push(row.tags_names);
                                         }
                                     }
                                 });
@@ -370,19 +378,27 @@ class Article {
                             createdAt: row.createdAt,
                             updatedAt: row.updatedAt
                         };
-                        if (row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names)) {
-                            if (!savedArticles.includes(row.id)) {
-                                savedArticles.push(row.id);
-                                fullArticles.push(newArticle);
-                            }
-                            else {
-                                fullArticles.forEach(savedArticle => {
-                                    if (savedArticle.id === row.id) {
-                                        if (!savedArticle['categories'].includes(row.categories_names)) {
-                                            savedArticle['categories'].push(row.categories_names);
+                        if (!savedArticles.includes(row.id)) {
+                            savedArticles.push(row.id);
+                            newArticle.categories.push(row.categories_names);
+                            newArticle.tags.push(row.tags_names);
+                            fullArticles.push(newArticle);
+                        }
+                        else {
+                            if (row.categories_names) {
+                                fullArticles.forEach(oldArticle => {
+                                    if (oldArticle.id === row.id) {
+                                        if (!oldArticle.categories.includes(row.categories_names)) {
+                                            oldArticle.categories.push(row.categories_names);
                                         }
-                                        if (!savedArticle['tags'].includes(row.tags_names)) {
-                                            savedArticle['tags'].push(row.tags_names);
+                                    }
+                                });
+                            }
+                            if (row.tags_names) {
+                                fullArticles.forEach(oldArticle => {
+                                    if (oldArticle.id === row.id) {
+                                        if (!oldArticle.tags.includes(row.tags_names)) {
+                                            oldArticle.tags.push(row.tags_names);
                                         }
                                     }
                                 });

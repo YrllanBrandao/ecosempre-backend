@@ -44,6 +44,20 @@ interface IArticleWithTags{
     categories: object[];
                       
 }
+interface IArticleGET{
+    id?: number;
+    title?: string;
+    author?: string;
+    content?: string;
+    thumbnail_url?: string;
+    author_id?: number;
+    slug?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    tags: string[];
+    categories: string[];
+                      
+}
 interface IArticleWithCategory {
     id?: number;
     title?: string;
@@ -287,7 +301,7 @@ class Article {
 
             const pagination: boolean = this.verifyPagination(limit, page);
             if (pagination) {
-                const fullArticles:IArticleWithTags[] = [];
+                const fullArticles:IArticleGET[] = [];
                 const offset = (Number(page) - 1) * Number(limit)
                 const articles = await Connection("articles")
                 .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
@@ -314,7 +328,7 @@ class Article {
                 // add each article into fullArticles
                 articles.forEach(row =>{
                     
-                    const newArticle:IArticleWithTags = {
+                    const newArticle:IArticleGET = {
                         id: row.id,
                         title: row.title,
                         author: row.author,
@@ -329,35 +343,43 @@ class Article {
                     }
                     
 
-                    if(row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names))
-                    {
+                   
                             
                            
                             if(!savedArticles.includes(row.id)){
                                 savedArticles.push(row.id);
+                                newArticle.categories.push(row.categories_names);
+                                newArticle.tags.push(row.tags_names);
                                 fullArticles.push(newArticle);
                             }
                             else{
-
-                                fullArticles.forEach(savedArticle =>{
-                                    if(savedArticle.id === row.id){
-                                        if(!savedArticle['categories'].includes(row.categories_names)){
-                                            savedArticle['categories'].push(row.categories_names);
+                                if(row.categories_names )
+                                {
+                                    fullArticles.forEach(oldArticle =>{
+                                        if(oldArticle.id === row.id){
+                                           if(!oldArticle.categories.includes(row.categories_names)){
+                                            oldArticle.categories.push(row.categories_names);
+                                           }
                                         }
+                                    })
+                                }   
+                                if(row.tags_names){
+                                    fullArticles.forEach(oldArticle =>{
+                                        if(oldArticle.id === row.id){
+                                           if(!oldArticle.tags.includes(row.tags_names)){
+                                            oldArticle.tags.push(row.tags_names);
+                                           }
+                                        }
+                                    })
+                                }
                                 
-                                        if(!savedArticle['tags'].includes(row.tags_names)){
-                                            savedArticle['tags'].push(row.tags_names);
-                                        }
-                                    }
-                                })
                             }
                         
-                    }
                 })
                 res.status(200).send(fullArticles);
             }
             else {
-                const fullArticles:IArticleWithTags[] = [];
+                const fullArticles:IArticleGET[] = [];
                 const articles = await Connection("articles")
                 .select("articles.*", "categoryArticles.name as categories_names", "tags.name as tags_names")
                 .orderBy("id", "desc")
@@ -374,7 +396,7 @@ class Article {
                 // add each article into fullArticles
                 articles.forEach(row =>{
                     
-                    const newArticle:IArticleWithTags = {
+                    const newArticle:IArticleGET = {
                         id: row.id,
                         title: row.title,
                         author: row.author,
@@ -389,32 +411,38 @@ class Article {
                     }
                     
 
-                    if(row.categories_names || row.tags_names && !newArticle.categories.includes(row.categories_names))
-                    {
+                   
                             
                            
                             if(!savedArticles.includes(row.id)){
                                 savedArticles.push(row.id);
+                                newArticle.categories.push(row.categories_names);
+                                newArticle.tags.push(row.tags_names);
                                 fullArticles.push(newArticle);
                             }
                             else{
-
-                                fullArticles.forEach(savedArticle =>{
-                                    if(savedArticle.id === row.id){
-                                        if(!savedArticle['categories'].includes(row.categories_names)){
-                                            savedArticle['categories'].push(row.categories_names);
+                                if(row.categories_names )
+                                {
+                                    fullArticles.forEach(oldArticle =>{
+                                        if(oldArticle.id === row.id){
+                                           if(!oldArticle.categories.includes(row.categories_names)){
+                                            oldArticle.categories.push(row.categories_names);
+                                           }
                                         }
+                                    })
+                                }   
+                                if(row.tags_names){
+                                    fullArticles.forEach(oldArticle =>{
+                                        if(oldArticle.id === row.id){
+                                           if(!oldArticle.tags.includes(row.tags_names)){
+                                            oldArticle.tags.push(row.tags_names);
+                                           }
+                                        }
+                                    })
+                                }
                                 
-                                        if(!savedArticle['tags'].includes(row.tags_names)){
-                                            savedArticle['tags'].push(row.tags_names);
-                                        }
-                                       
-                                       
-                                    }
-                                })
                             }
                         
-                    }
                 })
                 res.status(200).send(fullArticles);
 
