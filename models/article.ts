@@ -458,8 +458,8 @@ class Article {
             const regex: RegExp = /^\d+$/g;
             const key: string = req.params.key;
             const result: RegExpMatchArray | null = key.match(regex);
-            const tagsAdded:categoriesOrTags[] = [];
-            const categoriesAdded:categoriesOrTags[] = [];
+            const tagsAdded:string[] = [];
+            const categoriesAdded:string[] = [];
             //is string/slug
             if (result === null) {
                 const exists: boolean = await this.verifyArticleBySlug(key);
@@ -497,27 +497,26 @@ class Article {
                         
                         if (row.tag_name) {
                     
-                          if(!tagsAdded.some(tag => tag.id === row.tag_id))
+                          if(!tagsAdded.some(tag => tag === row.tag_name))
                                 {
-                                    console.log("não existe")
                                     const objectTag:categoriesOrTags = {
                                         id: row.tag_id,
                                         name: row.tag_name
                                     }
                                     articleWithTags.tags.push(objectTag);
-                                    tagsAdded.push(objectTag);
+                                    tagsAdded.push(objectTag.name);
                                 }
                         }
                         if(row.category_name){
-                            if(!articleWithTags.categories.includes(row.category_name))
-                                {
-                                    const objectCategory:categoriesOrTags = {
-                                        id: row.category_id,
-                                        name: row.category_name
-                                    }
-                                    articleWithTags.categories.push(objectCategory);
-                                    categoriesAdded.push(objectCategory);
+                            if(!categoriesAdded.some(category => category === row.category_name))
+                            {
+                                const objectCategory:categoriesOrTags = {
+                                    id: row.category_id,
+                                    name: row.category_name
                                 }
+                                articleWithTags.categories.push(objectCategory);
+                                categoriesAdded.push(objectCategory.name);
+                            }
                         }
                       });
                       

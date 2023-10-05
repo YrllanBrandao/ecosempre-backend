@@ -145,24 +145,23 @@ class Article {
                                 articleWithTags.updatedAt = row.updatedAt;
                             }
                             if (row.tag_name) {
-                                if (!tagsAdded.some(tag => tag.id === row.tag_id)) {
-                                    console.log("não existe");
+                                if (!tagsAdded.some(tag => tag === row.tag_name)) {
                                     const objectTag = {
                                         id: row.tag_id,
                                         name: row.tag_name
                                     };
                                     articleWithTags.tags.push(objectTag);
-                                    tagsAdded.push(objectTag);
+                                    tagsAdded.push(objectTag.name);
                                 }
                             }
                             if (row.category_name) {
-                                if (!articleWithTags.categories.includes(row.category_name)) {
+                                if (!categoriesAdded.some(category => category === row.category_name)) {
                                     const objectCategory = {
                                         id: row.category_id,
                                         name: row.category_name
                                     };
                                     articleWithTags.categories.push(objectCategory);
-                                    categoriesAdded.push(objectCategory);
+                                    categoriesAdded.push(objectCategory.name);
                                 }
                             }
                         });
