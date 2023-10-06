@@ -17,6 +17,7 @@ const categoryCollectionPoints_1 = __importDefault(require("./routes/categoryCol
 const collectionPoint_1 = __importDefault(require("./routes/collectionPoint"));
 const schedulePickup_1 = __importDefault(require("./routes/schedulePickup"));
 const categoryArticles_1 = __importDefault(require("./routes/categoryArticles"));
+const recaptcha_1 = __importDefault(require("./routes/recaptcha"));
 // setup admin
 (0, createAdminUserScript_1.default)();
 const app = (0, express_1.default)();
@@ -40,4 +41,5 @@ app.use("/api/v1", categoryCollectionPoints_1.default);
 app.use("/api/v1", collectionPoint_1.default);
 app.use("/api/v1", schedulePickup_1.default);
 app.use("/api/v1", categoryArticles_1.default);
+app.use("/api/v1", recaptcha_1.default);
 exports.default = app;
